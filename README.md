@@ -8,6 +8,14 @@ The application requires the following environment variable:
 
 - `REACT_APP_API_URL`: The URL of the backend API
 
+## Security Notes
+
+This project includes package overrides to address security vulnerabilities:
+- `nth-check`: Enforced version >=2.0.1
+- `postcss`: Enforced version >=8.4.31
+
+These overrides are configured in package.json to ensure secure versions are used regardless of transitive dependencies.
+
 ## Docker Setup
 
 This project includes Docker configuration for both development and production environments.
@@ -83,3 +91,18 @@ REACT_APP_API_URL=http://localhost:8000 npm start
 
 # Create production build with API URL
 REACT_APP_API_URL=https://api.yourdomain.com npm run build
+```
+
+## Package Updates
+
+After cloning or pulling updates, it's recommended to run:
+
+```bash
+# Install dependencies with security updates
+npm install
+
+# Or to specifically update security-related packages
+npm update nth-check postcss
+```
+
+This ensures all security patches and overrides are properly applied.

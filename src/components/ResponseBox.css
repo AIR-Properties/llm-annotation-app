@@ -1,0 +1,103 @@
+.response-box {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    border: 1px solid #e0f2e9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+.response-box:nth-child(even) {
+    background-color: #fafffe;
+}
+
+.response-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.response-box-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #065f46;
+}
+
+.response-box-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #1f2937;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.response-box-buttons {
+    margin-top: 10px;
+    text-align: right;
+    padding-top: 10px;
+    border-top: 1px solid #e0f2e9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.response-box-button {
+    padding: 8px 16px;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    background-color: transparent;
+}
+
+.response-box-button.helpful {
+    color: #059669;
+    border: 2px solid #059669;
+}
+
+.response-box-button.helpful:hover,
+.response-box-button.helpful.selected {
+    background-color: #059669;
+    color: white;
+}
+
+.response-box-button.not-helpful {
+    color: #f97316;
+    border: 2px solid #f97316;
+}
+
+.response-box-button.not-helpful:hover,
+.response-box-button.not-helpful.selected {
+    background-color: #f97316;
+    color: white;
+}
+
+.response-box-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media screen and (max-width: 768px) {
+    .response-box {
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .response-box-buttons {
+        justify-content: center;
+    }
+
+    .response-box-button {
+        padding: 8px 12px;
+        font-size: 13px;
+        width: auto;
+        flex: 0 1 auto;
+    }
+}

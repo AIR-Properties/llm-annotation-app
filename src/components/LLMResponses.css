@@ -1,0 +1,218 @@
+.llm-responses-container {
+    width: 90%;
+    max-width: 700px;
+    background-color: #ffffff;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    position: relative;
+    margin: 40px auto;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 14px;
+    position: absolute;
+    left: 30px;
+    top: 30px;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+.input-section {
+    padding-top: 80px;
+    margin-bottom: 30px;
+    background-color: #f0f7ff;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #e1effe;
+    margin-top: 60px;
+    flex-shrink: 0;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #2d5b9e;
+}
+
+.llm-responses-container textarea, 
+.llm-responses-container input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cce4ff;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.llm-responses-container textarea:focus,
+.llm-responses-container input[type="text"]:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.llm-responses-container textarea {
+    min-height: 100px;
+}
+
+.llm-responses-container input[type="text"] {
+    flex: 1;
+}
+
+.send-button {
+    background-color: #0084ff;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0, 132, 255, 0.2);
+}
+
+.send-button:hover:not(:disabled) {
+    background-color: #0066cc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 132, 255, 0.2);
+}
+
+.send-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.loading-spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+    font-size: 18px;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.remove-button {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.remove-button:hover {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+}
+
+.paste-button {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.paste-button:hover {
+    background-color: #dcfce7;
+    border-color: #86efac;
+}
+
+.responses-section {
+    background-color: #f7fdf9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0f2e9;
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    .llm-responses-container {
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        border-radius: 0;
+        box-shadow: none;
+        min-height: 100vh;
+    }
+
+    .input-row {
+        flex-wrap: nowrap;
+        gap: 5px;
+    }
+
+    .llm-responses-container input[type="text"] {
+        min-width: 0;
+    }
+
+    .remove-button,
+    .paste-button {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .back-button {
+        position: absolute;
+        left: 20px;
+        top: 20px;
+    }
+
+    .input-section {
+        margin-top: 60px;
+    }
+
+    .responses-section {
+        margin-bottom: 15px;
+    }
+}

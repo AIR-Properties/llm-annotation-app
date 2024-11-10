@@ -1,0 +1,173 @@
+.home-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8fafc;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+h1 {
+    color: #1e293b;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInDown 0.8s ease forwards;
+}
+
+.air-logo {
+    width: 120px;
+    height: auto;
+    margin: 1rem 0 2rem 0;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.air-logo.loaded {
+    animation: logoReveal 1s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.name-input-container {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.6s;
+}
+
+.name-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #1e293b;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.name-input:focus {
+    outline: none;
+    border-color: #0084ff;
+    box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.1);
+}
+
+.name-input::placeholder {
+    color: #94a3b8;
+}
+
+@keyframes logoReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.9s;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #0084ff;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 132, 255, 0.2);
+}
+
+.nav-button:hover {
+    background-color: #0066cc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 132, 255, 0.2);
+}
+
+.nav-button:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+        padding: 0 20px;
+    }
+
+    .air-logo {
+        width: 100px;
+        margin: 0.75rem 0 1.5rem 0;
+    }
+
+    .name-input-container {
+        width: 90%;
+    }
+
+    .links {
+        flex-direction: column;
+        width: 90%;
+        max-width: 300px;
+    }
+
+    .nav-button {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Development service
+  dev:
+    build:
+      context: .
+      target: development
+    container_name: annotation-app-dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:8000}
+    command: npm start
+
+  # Production build service
+  prod:
+    build:
+      context: .
+      target: production
+      args:
+        - REACT_APP_API_URL=${REACT_APP_API_URL}
+    container_name: annotation-app-prod
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
