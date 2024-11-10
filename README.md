@@ -1,46 +1,85 @@
-# Getting Started with Create React App
+# Annotation App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React application for managing annotations and LLM responses.
 
-## Available Scripts
+## Environment Variables
 
-In the project directory, you can run:
+The application requires the following environment variable:
 
-### `npm start`
+- `REACT_APP_API_URL`: The URL of the backend API
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Docker Setup
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This project includes Docker configuration for both development and production environments.
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Docker
+- Docker Compose
 
-### `npm run build`
+### Development Environment
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To run the application in development mode with hot-reloading:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+# Set the API URL and run development server
+REACT_APP_API_URL=http://localhost:8000 docker-compose up dev
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Or using the provided script
+REACT_APP_API_URL=http://localhost:8000 ./docker.sh dev
+```
 
-### `npm run eject`
+The development server will be available at `http://localhost:3000`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Production Environment
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To build and run the production version:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+# Set the API URL and run production server
+REACT_APP_API_URL=https://api.yourdomain.com docker-compose up prod
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+# Or using the provided script
+REACT_APP_API_URL=https://api.yourdomain.com ./docker.sh prod
+```
 
-## Learn More
+The production build will be served at `http://localhost:80`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Additional Commands
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+# Build the Docker images (remember to set REACT_APP_API_URL)
+REACT_APP_API_URL=https://api.yourdomain.com ./docker.sh build
+
+# Stop running containers
+./docker.sh stop
+
+# Clean up Docker resources (remove containers, images, and volumes)
+./docker.sh clean
+```
+
+### Docker Script Usage
+
+The `docker.sh` script provides convenient commands for managing the Docker environment:
+
+- `dev`: Run development environment
+- `prod`: Run production environment
+- `build`: Build Docker images
+- `stop`: Stop running containers
+- `clean`: Stop and remove containers, networks, and images
+
+Remember to set the `REACT_APP_API_URL` environment variable when running any of these commands.
+
+## Development Without Docker
+
+If you prefer to run the application without Docker:
+
+```bash
+# Install dependencies
+npm install
+
+# Set API URL and start development server
+REACT_APP_API_URL=http://localhost:8000 npm start
+
+# Create production build with API URL
+REACT_APP_API_URL=https://api.yourdomain.com npm run build
