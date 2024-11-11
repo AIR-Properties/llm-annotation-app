@@ -14,20 +14,25 @@ jobs:
 
     - name: Build and Deploy
       uses: appleboy/ssh-action@v0.1.8
+      env:
+        REACT_APP_API_URL: ${{ secrets.API_URL }}
       with:
         host: ${{ secrets.EC2_HOST }}
         username: runner
         key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+        envs: REACT_APP_API_URL
         script: |
           cd ${{ secrets.APP_PATH }}
           git pull origin main
-          docker build -f Dockerfile -t annotation-app:latest .
+          docker build \
+            --build-arg REACT_APP_API_URL=$REACT_APP_API_URL \
+            -f Dockerfile \
+            -t annotation-app:latest .
           docker stop annotation-app || true
           docker rm annotation-app || true
           docker run -d \
             --name annotation-app \
             -p 9898:80 \
-            -e REACT_APP_API_URL=${{ secrets.API_URL }} \
             annotation-app:latest
 
     - name: Cleanup old images

@@ -26,6 +26,10 @@ FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 
+# Add build-time arguments
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
 # Install dependencies
 COPY package*.json ./
 RUN npm install
@@ -41,6 +45,9 @@ FROM nginx:alpine AS production
 
 # Copy built assets from builder stage
 COPY --from=builder /app/build /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
