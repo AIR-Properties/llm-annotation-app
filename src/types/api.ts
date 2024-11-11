@@ -1,5 +1,3 @@
-import { FeedbackType, Response as DomainResponse, Prompt, UIResponse } from './domain';
-
 // API Request types
 export interface AskRequest {
     prompt: string;
@@ -10,7 +8,7 @@ export interface AskRequest {
 export interface FeedbackRequest {
     prompt_id: string;
     response_id: string;
-    feedback: FeedbackType;
+    feedback: string;
     username: string;
 }
 

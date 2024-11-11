@@ -11,7 +11,6 @@ import {
     ErrorState, 
     LoadingState, 
     ResultsState, 
-    UIResponse, 
     FeedbackType,
     Response as DomainResponse 
 } from '../types/domain';

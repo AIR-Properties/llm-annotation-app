@@ -28,7 +28,6 @@ const Annotations: React.FC = () => {
   const [annotations, setAnnotations] = useState<AnnotationBox[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showSwipeHint, setShowSwipeHint] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number>(0);
 
@@ -71,19 +70,6 @@ const Annotations: React.FC = () => {
     fetchAnnotations();
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft') {
-        handlePrevious();
-      } else if (event.key === 'ArrowRight') {
-        handleNext();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex]);
-
   const handleNext = useCallback(() => {
     if (currentIndex < annotations.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -95,6 +81,19 @@ const Annotations: React.FC = () => {
       setCurrentIndex(prev => prev - 1);
     }
   }, [currentIndex]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        handlePrevious();
+      } else if (event.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNext, handlePrevious]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -161,7 +160,7 @@ const Annotations: React.FC = () => {
           className="annotation-boxes"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
-          {annotations.map((annotation, index) => (
+          {annotations.map(annotation => (
             <div key={annotation.id} className="annotation-box">
               <div className="prompt-title">
                 {annotation.title}
@@ -206,12 +205,6 @@ const Annotations: React.FC = () => {
           {currentIndex + 1} / {annotations.length}
         </div>
       </div>
-
-      {showSwipeHint && (
-        <div className="swipe-hint">
-          Swipe left or right to navigate between prompts
-        </div>
-      )}
       
       <Footer />
     </div>

@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { ERROR_MESSAGES } from '../constants/messages';
+import React, { useState, useCallback } from "react";
+import { ERROR_MESSAGES } from "../constants/messages";
 
 interface PromptInputProps {
   onSubmit: (prompt: string, propertyLink: string) => Promise<void>;
@@ -10,22 +10,25 @@ interface PromptInputProps {
 type PromptState = string;
 type PropertyLinkState = string;
 
-const DEFAULT_PROPERTY_LINK = 'https://www.propertyfinder.ae/en/plp/buy/apartment-for-sale-dubai-downtown-dubai-29-burj-boulevard-29-burj-boulevard-podium-12692673.html';
+const DEFAULT_PROPERTY_LINK =
+  "https://www.propertyfinder.ae/en/plp/buy/apartment-for-sale-dubai-downtown-dubai-29-burj-boulevard-29-burj-boulevard-podium-12692673.html";
 
-const PromptInput: React.FC<PromptInputProps> = ({ 
-  onSubmit, 
-  isLoading, 
-  onError 
+const PromptInput: React.FC<PromptInputProps> = ({
+  onSubmit,
+  isLoading,
+  onError,
 }) => {
-  const [prompt, setPrompt] = useState<PromptState>('');
-  const [propertyLink, setPropertyLink] = useState<PropertyLinkState>(DEFAULT_PROPERTY_LINK);
+  const [prompt, setPrompt] = useState<PromptState>("");
+  const [propertyLink, setPropertyLink] = useState<PropertyLinkState>(
+    DEFAULT_PROPERTY_LINK
+  );
 
   const handlePaste = useCallback(async (): Promise<void> => {
     try {
       const text = await navigator.clipboard.readText();
       setPropertyLink(text);
     } catch (err) {
-      console.error('Failed to read clipboard contents:', err);
+      console.error("Failed to read clipboard contents:", err);
       onError(ERROR_MESSAGES.CLIPBOARD_ERROR);
     }
   }, [onError]);
@@ -33,25 +36,33 @@ const PromptInput: React.FC<PromptInputProps> = ({
   const handleSubmit = useCallback(async (): Promise<void> => {
     if (!prompt.trim()) return;
     await onSubmit(prompt.trim(), propertyLink.trim());
-    setPrompt('');
+    setPrompt("");
   }, [prompt, propertyLink, onSubmit]);
 
-  const handlePromptChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    setPrompt(e.target.value);
-  }, []);
+  const handlePromptChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+      setPrompt(e.target.value);
+    },
+    []
+  );
 
-  const handlePropertyLinkChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-    setPropertyLink(e.target.value);
-  }, []);
+  const handlePropertyLinkChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      setPropertyLink(e.target.value);
+    },
+    []
+  );
 
   const handleClearPropertyLink = useCallback((): void => {
-    setPropertyLink('');
+    setPropertyLink("");
   }, []);
 
   return (
     <div className="input-section">
       <div className="input-group">
-        <label className="input-label" htmlFor="prompt">Prompt</label>
+        <label className="input-label" htmlFor="prompt">
+          Prompt
+        </label>
         <textarea
           id="prompt"
           value={prompt}
@@ -60,7 +71,9 @@ const PromptInput: React.FC<PromptInputProps> = ({
         />
       </div>
       <div className="input-group">
-        <label className="input-label" htmlFor="property-link">Property Link</label>
+        <label className="input-label" htmlFor="property-link">
+          Property Link
+        </label>
         <div className="input-row">
           <input
             type="text"
@@ -68,27 +81,19 @@ const PromptInput: React.FC<PromptInputProps> = ({
             value={propertyLink}
             onChange={handlePropertyLinkChange}
           />
-          <button 
-            className="remove-button" 
-            onClick={handleClearPropertyLink}
-          >
+          <button className="remove-button" onClick={handleClearPropertyLink}>
             Remove
           </button>
-          <button 
-            className="paste-button" 
-            onClick={handlePaste}
-          >
+          <button className="paste-button" onClick={handlePaste}>
             Paste
           </button>
         </div>
-        <button 
-          className={`send-button ${isLoading ? 'loading' : ''}`} 
+        <button
+          className={`send-button ${isLoading ? "loading" : ""}`}
           onClick={handleSubmit}
           disabled={isLoading || !prompt.trim()}
         >
-          {isLoading ? (
-            <span className="loading-spinner">↻</span>
-          ) : 'Send'}
+          {isLoading ? <span className="loading-spinner">↻</span> : "Send"}
         </button>
       </div>
     </div>

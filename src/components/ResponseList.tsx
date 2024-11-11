@@ -1,21 +1,24 @@
-import React, { useCallback } from 'react';
-import ResponseBox from './ResponseBox';
-import { ResponseListProps } from '../types/components';
-import { FeedbackType } from '../types/domain';
+import React, { useCallback } from "react";
+import ResponseBox from "./ResponseBox";
+import { ResponseListProps } from "../types/components";
+import { FeedbackType } from "../types/domain";
 
 const ResponseList: React.FC<ResponseListProps> = ({
   results,
   onFeedbackChange,
   onError,
-  className
+  className,
 }) => {
-  const handleFeedback = useCallback((resultId: string, feedback: FeedbackType | undefined): void => {
-    onFeedbackChange(resultId, feedback);
-  }, [onFeedbackChange]);
+  const handleFeedback = useCallback(
+    (resultId: string, feedback: FeedbackType | undefined): void => {
+      onFeedbackChange(resultId, feedback);
+    },
+    [onFeedbackChange]
+  );
 
   return (
-    <div className={`responses-section ${className || ''}`}>
-      {results.map(result => (
+    <div className={`responses-section ${className || ""}`}>
+      {results.map((result) => (
         <ResponseBox
           key={result.id}
           title={result.title}
