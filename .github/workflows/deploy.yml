@@ -31,6 +31,7 @@ jobs:
           docker stop annotation-app || true
           docker rm annotation-app || true
           docker run -d \
+            -e REACT_APP_API_URL=$REACT_APP_API_URL
             --name annotation-app \
             -p 9898:80 \
             annotation-app:latest

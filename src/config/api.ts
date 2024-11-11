@@ -1,5 +1,9 @@
+if (!process.env.REACT_APP_API_URL) {
+  throw new Error('REACT_APP_API_URL environment variable is not set');
+}
+
 const API_CONFIG = {
-  BASE_URL: process.env.REACT_APP_API_URL || "",
+  BASE_URL: process.env.REACT_APP_API_URL,
   ENDPOINTS: {
     ASK: "/annotation/ask",
     FEEDBACK: "/annotation/feedback",
