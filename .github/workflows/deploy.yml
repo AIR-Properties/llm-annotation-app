@@ -15,7 +15,7 @@ jobs:
     - name: Build and Deploy
       uses: appleboy/ssh-action@v0.1.8
       env:
-        REACT_APP_API_URL: ${{ secrets.API_URL }}
+        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       with:
         host: ${{ secrets.EC2_HOST }}
         username: runner
@@ -24,14 +24,14 @@ jobs:
         script: |
           cd ${{ secrets.APP_PATH }}
           git pull origin main
+          echo "Building with REACT_APP_API_URL=${REACT_APP_API_URL}"
           docker build \
-            --build-arg REACT_APP_API_URL="${{ secrets.REACT_APP_API_URL }}" \
+            --build-arg REACT_APP_API_URL="${REACT_APP_API_URL}" \
             -f Dockerfile \
             -t annotation-app:latest .
           docker stop annotation-app || true
           docker rm annotation-app || true
           docker run -d \
-            -e REACT_APP_API_URL="${{ secrets.REACT_APP_API_URL }}" \
             --name annotation-app \
             -p 9898:80 \
             annotation-app:latest
