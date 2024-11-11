@@ -1,7 +1,5 @@
-if (!process.env.REACT_APP_API_URL) {
-  throw new Error('REACT_APP_API_URL environment variable is not set');
-}
 
+console.log("ENV::::", process.env.REACT_APP_API_URL)
 const API_CONFIG = {
   BASE_URL: process.env.REACT_APP_API_URL,
   ENDPOINTS: {
