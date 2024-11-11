@@ -1,0 +1,40 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build and Deploy
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: runner
+        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+        script: |
+          cd ${{ secrets.APP_PATH }}
+          git pull origin main
+          docker build -f Dockerfile -t annotation-app:latest .
+          docker stop annotation-app || true
+          docker rm annotation-app || true
+          docker run -d \
+            --name annotation-app \
+            -p 80:80 \
+            -e REACT_APP_API_URL=${{ secrets.API_URL }} \
+            annotation-app:latest
+
+    - name: Cleanup old images
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: runner
+        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+        script: |
+          docker system prune -f

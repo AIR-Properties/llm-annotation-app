@@ -16,6 +16,51 @@ This project includes package overrides to address security vulnerabilities:
 
 These overrides are configured in package.json to ensure secure versions are used regardless of transitive dependencies.
 
+## Linting and Code Style
+
+This project uses ESLint and Prettier for code quality and formatting:
+
+```bash
+# Run linting
+npm run lint
+
+# Fix linting issues
+npm run lint:fix
+
+# Format code
+npm run format
+```
+
+ESLint configuration includes:
+- TypeScript support
+- React hooks rules
+- Prettier integration
+- Custom rules for React and TypeScript
+
+## GitHub Workflows
+
+### Linting
+
+The project includes automated linting on GitHub:
+- Runs on push to main branch and pull requests
+- Checks ESLint rules
+- Verifies code formatting
+- Fails if any issues are found
+
+### Deployment
+
+Automated deployment workflow:
+- Triggers on push to main branch
+- Builds Docker image
+- Deploys to production server
+- Cleans up old Docker images
+
+Required secrets for deployment:
+- `EC2_HOST`: Production server hostname
+- `AWS_SSH_PRIVATE_KEY`: SSH key for server access
+- `APP_PATH`: Application path on server
+- `API_URL`: Production API URL
+
 ## Docker Setup
 
 This project includes Docker configuration for both development and production environments.
