@@ -27,7 +27,6 @@ services:
         - REACT_APP_API_URL=${REACT_APP_API_URL}
     container_name: annotation-app-prod
     ports:
-      - "80:80"
+      - "9898:80"
     environment:
       - NODE_ENV=production
-      - REACT_APP_API_URL=${REACT_APP_API_URL}

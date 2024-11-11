@@ -40,14 +40,20 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Production stage - simple static file serving
-FROM nginx:alpine AS production
+# Production stage - serve static files
+FROM node:18-alpine AS production
+
+# Set working directory
+WORKDIR /app
+
+# Install serve
+RUN npm install -g serve
 
 # Copy built assets from builder stage
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/build ./build
 
-# Expose port 80
+# Expose port
 EXPOSE 80
 
-# Start nginx with default configuration
-CMD ["nginx", "-g", "daemon off;"]
+# Start static file server
+CMD ["serve", "-s", "build", "-l", "80"]

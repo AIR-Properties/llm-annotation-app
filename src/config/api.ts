@@ -1,5 +1,4 @@
-
-console.log("ENV::::", process.env.REACT_APP_API_URL)
+console.log("ENV::::", process.env.REACT_APP_API_URL);
 const API_CONFIG = {
   BASE_URL: process.env.REACT_APP_API_URL,
   ENDPOINTS: {
