@@ -26,7 +26,7 @@ jobs:
           docker rm annotation-app || true
           docker run -d \
             --name annotation-app \
-            -p 80:80 \
+            -p 9898:80 \
             -e REACT_APP_API_URL=${{ secrets.API_URL }} \
             annotation-app:latest
 
