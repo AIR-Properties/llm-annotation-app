@@ -24,9 +24,9 @@ jobs:
         script: |
           cd ${{ secrets.APP_PATH }}
           git pull origin main
-          echo "Building with REACT_APP_API_URL=${{REACT_APP_API_URL}}"
+          echo "Building with REACT_APP_API_URL=${{secrets.REACT_APP_API_URL}}"
           docker build \
-            --build-arg REACT_APP_API_URL="${{REACT_APP_API_URL}}" \
+            --build-arg REACT_APP_API_URL="${{secrets.REACT_APP_API_URL}}" \
             -f Dockerfile \
             -t annotation-app:latest .
           docker stop annotation-app || true
