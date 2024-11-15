@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import ResponseBox from "./ResponseBox";
 import Toast from "./Toast";
 import Footer from "./Footer";
+import BackButton from "./BackButton";
 import { annotationService, APIError } from "../services/api";
 import { mapAnnotationsToDomain } from "../utils/mappers";
 import { ERROR_MESSAGES } from "../constants/messages";
@@ -30,7 +30,6 @@ interface AnnotationBox {
 }
 
 const Annotations: React.FC = () => {
-  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [annotations, setAnnotations] = useState<AnnotationBox[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -154,10 +153,6 @@ const Annotations: React.FC = () => {
     setError(errorMessage);
   }, []);
 
-  const handleBack = useCallback(() => {
-    navigate("/");
-  }, [navigate]);
-
   if (isLoading) {
     return <div className="annotations-container loading">Loading...</div>;
   }
@@ -172,9 +167,7 @@ const Annotations: React.FC = () => {
       {error && (
         <Toast message={error} type="error" onClose={() => setError(null)} />
       )}
-      <button onClick={handleBack} className="back-button">
-        ← Back
-      </button>
+      <BackButton to="/" />
 
       <div className="content-wrapper">
         <div

@@ -19,31 +19,11 @@
   color: #666;
 }
 
-.back-button {
-  display: inline-block;
-  padding: 8px 16px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  text-decoration: none;
-  transition: background-color 0.3s;
-  font-size: 14px;
-  position: absolute;
-  left: 30px;
-  top: 30px;
-}
-
-.back-button:hover {
-  background-color: #5a6268;
-}
-
 .content-wrapper {
   flex: 1;
   overflow: hidden;
   position: relative;
+  margin-top: 60px;
 }
 
 .annotation-boxes {
@@ -147,16 +127,6 @@
     border-radius: 0;
     box-shadow: none;
     min-height: 100vh;
-  }
-
-  .back-button {
-    position: absolute;
-    left: 20px;
-    top: 20px;
-  }
-
-  .prompt-section {
-    margin-top: 60px;
   }
 
   .nav-button {

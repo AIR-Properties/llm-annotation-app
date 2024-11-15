@@ -35,7 +35,7 @@ export interface ResponseBoxProps extends WithClassName {
 
 export interface ResponseListProps extends WithClassName {
   results: ReadonlyArray<UIResponse>;
-  onFeedbackChange: FeedbackHandler;
+  onFeedbackChange?: FeedbackHandler;
   onError: ErrorHandler;
 }
 

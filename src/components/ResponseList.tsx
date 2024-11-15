@@ -11,7 +11,7 @@ const ResponseList: React.FC<ResponseListProps> = ({
 }) => {
   const handleFeedback = useCallback(
     (resultId: string, feedback: FeedbackType | undefined): void => {
-      onFeedbackChange(resultId, feedback);
+      onFeedbackChange?.(resultId, feedback);
     },
     [onFeedbackChange]
   );
@@ -26,7 +26,11 @@ const ResponseList: React.FC<ResponseListProps> = ({
           feedback={result.feedback}
           prompt_id={result.prompt_id}
           response_id={result.id}
-          onFeedbackChange={(feedback) => handleFeedback(result.id, feedback)}
+          onFeedbackChange={
+            onFeedbackChange
+              ? (feedback) => handleFeedback(result.id, feedback)
+              : undefined
+          }
           onError={onError}
         />
       ))}

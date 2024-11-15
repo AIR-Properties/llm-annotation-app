@@ -1,34 +1,24 @@
 import React, { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
-import Toast from "./Toast";
-import Footer from "./Footer";
-import PromptInput from "./PromptInput";
 import ResponseList from "./ResponseList";
+import PromptInput from "./PromptInput";
+import Toast from "./Toast";
+import BackButton from "./BackButton";
 import { annotationService, APIError } from "../services/api";
 import { mapAskResponseToDomain } from "../utils/mappers";
-import { getUserName } from "../utils/auth";
-import {
-  ErrorState,
-  LoadingState,
-  ResultsState,
-  FeedbackType,
-  Response as DomainResponse,
-} from "../types/domain";
-import { SAMPLE_RESULTS } from "../data/sampleData";
 import { ERROR_MESSAGES } from "../constants/messages";
+import { Response as DomainResponse } from "../types/domain";
+import { getUserName } from "../utils/auth";
 import "./LLMResponses.css";
 
 const LLMResponses: React.FC = () => {
-  const [isLoading, setIsLoading] = useState<LoadingState>(false);
-  const [error, setError] = useState<ErrorState>(null);
-  const [results, setResults] = useState<ResultsState>(SAMPLE_RESULTS);
+  const [results, setResults] = useState<DomainResponse[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = useCallback(
     async (prompt: string, propertyLink: string) => {
-      setIsLoading(true);
-      setError(null);
-
       try {
+        setIsLoading(true);
         const username = getUserName();
         if (!username) {
           setError("User not authenticated");
@@ -37,17 +27,14 @@ const LLMResponses: React.FC = () => {
 
         const response = await annotationService.ask({
           prompt,
-          propertyLink: propertyLink || undefined,
+          propertyLink,
           username,
         });
 
-        const domainResponses: DomainResponse[] =
-          mapAskResponseToDomain(response);
-        const newResults: ResultsState = domainResponses;
-
-        setResults(newResults);
+        const mappedResults = mapAskResponseToDomain(response);
+        setResults(mappedResults);
       } catch (err) {
-        console.error("Error sending prompt:", err);
+        console.error("Error submitting prompt:", err);
         if (err instanceof APIError) {
           setError(ERROR_MESSAGES.REQUEST_FAILED(err.message));
         } else if (err instanceof Error) {
@@ -62,47 +49,22 @@ const LLMResponses: React.FC = () => {
     []
   );
 
-  const handleFeedbackChange = useCallback(
-    (resultId: string, feedback: FeedbackType | undefined): void => {
-      setResults((prevResults) =>
-        prevResults.map((result) =>
-          result.id === resultId ? { ...result, feedback } : result
-        )
-      );
-    },
-    []
-  );
-
-  const handleError = useCallback((errorMessage: string): void => {
+  const handleError = useCallback((errorMessage: string) => {
     setError(errorMessage);
-  }, []);
-
-  const handleClearError = useCallback((): void => {
-    setError(null);
   }, []);
 
   return (
     <div className="llm-responses-container">
       {error && (
-        <Toast message={error} type="error" onClose={handleClearError} />
+        <Toast message={error} type="error" onClose={() => setError(null)} />
       )}
-      <Link to="/" className="back-button">
-        ← Back
-      </Link>
-
+      <BackButton to="/" />
       <PromptInput
         onSubmit={handleSubmit}
         isLoading={isLoading}
         onError={handleError}
       />
-
-      <ResponseList
-        results={results}
-        onFeedbackChange={handleFeedbackChange}
-        onError={handleError}
-      />
-
-      <Footer />
+      <ResponseList results={results} onError={handleError} />
     </div>
   );
 };
