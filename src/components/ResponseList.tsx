@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import ResponseBox from "./ResponseBox";
 import { ResponseListProps } from "../types/components";
 import { FeedbackType } from "../types/domain";
+import "./ResponseList.css";
 
 const ResponseList: React.FC<ResponseListProps> = ({
   results,

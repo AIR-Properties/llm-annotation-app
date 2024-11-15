@@ -1,114 +1,172 @@
 .response-box {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    transition: all 0.3s;
-    border: 1px solid #e0f2e9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 15px;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  transition: all 0.3s;
+  border: 1px solid #e0f2e9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .response-box:nth-child(even) {
-    background-color: #fafffe;
+  background-color: #fafffe;
 }
 
 .response-box:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.response-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .response-box-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #065f46;
+  font-weight: bold;
+  color: #065f46;
+  flex: 1;
+}
+
+.copy-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.copy-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  color: #6B7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.copy-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.copy-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.copy-text {
+  color: #6B7280;
+  transition: color 0.2s ease;
+}
+
+.copy-button:hover {
+  background-color: #f3f4f6;
+}
+
+.copy-button:hover .copy-text,
+.copy-button:hover .copy-icon {
+  color: #374151;
+}
+
+.copy-button:active {
+  transform: scale(0.95);
 }
 
 .response-box-text {
-    font-size: 14px;
-    margin-bottom: 10px;
-    color: #1f2937;
-    line-height: 1.6;
-    white-space: pre-wrap;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #1f2937;
+  line-height: 1.6;
+  white-space: pre-wrap;
 }
 
 .response-box-buttons {
-    margin-top: 10px;
-    text-align: right;
-    padding-top: 10px;
-    border-top: 1px solid #e0f2e9;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    flex-wrap: wrap;
+  margin-top: 10px;
+  text-align: right;
+  padding-top: 10px;
+  border-top: 1px solid #e0f2e9;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .response-box-button {
-    padding: 8px 16px;
-    margin: 0;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s;
-    background-color: transparent;
+  padding: 8px 16px;
+  margin: 0;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+  background-color: transparent;
 }
 
 .response-box-button.helpful {
-    color: #059669;
-    border: 2px solid #059669;
+  color: #059669;
+  border: 2px solid #059669;
 }
 
 .response-box-button.helpful:hover,
 .response-box-button.helpful.selected {
-    background-color: #059669;
-    color: white;
+  background-color: #059669;
+  color: white;
 }
 
 .response-box-button.neutral {
-    color: #6B7280;
-    border: 2px solid #6B7280;
+  color: #6B7280;
+  border: 2px solid #6B7280;
 }
 
 .response-box-button.neutral:hover,
 .response-box-button.neutral.selected {
-    background-color: #6B7280;
-    color: white;
+  background-color: #6B7280;
+  color: white;
 }
 
 .response-box-button.not-helpful {
-    color: #f97316;
-    border: 2px solid #f97316;
+  color: #f97316;
+  border: 2px solid #f97316;
 }
 
 .response-box-button.not-helpful:hover,
 .response-box-button.not-helpful.selected {
-    background-color: #f97316;
-    color: white;
+  background-color: #f97316;
+  color: white;
 }
 
 .response-box-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 @media screen and (max-width: 768px) {
-    .response-box {
-        padding: 15px;
-        margin-bottom: 10px;
-    }
+  .response-box {
+    padding: 15px;
+    margin-bottom: 10px;
+  }
 
-    .response-box-buttons {
-        justify-content: center;
-    }
+  .response-box-buttons {
+    justify-content: center;
+  }
 
-    .response-box-button {
-        padding: 8px 12px;
-        font-size: 13px;
-        width: auto;
-        flex: 0 1 auto;
-    }
+  .response-box-button {
+    padding: 8px 12px;
+    font-size: 13px;
+    width: auto;
+    flex: 0 1 auto;
+  }
 }

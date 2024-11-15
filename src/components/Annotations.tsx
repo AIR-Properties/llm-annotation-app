@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import ResponseBox from "./ResponseBox";
+import ResponseList from "./ResponseList";
 import Toast from "./Toast";
 import Footer from "./Footer";
 import BackButton from "./BackButton";
@@ -124,29 +124,22 @@ const Annotations: React.FC = () => {
   };
 
   const handleFeedbackChange = useCallback(
-    (
-      annotationId: string,
-      responseId: string,
-      newFeedback: FeedbackType | undefined
-    ) => {
+    (resultId: string, newFeedback: FeedbackType | undefined) => {
+      const currentAnnotation = annotations[currentIndex];
       setAnnotations((prevAnnotations) => {
-        const newAnnotations = prevAnnotations.map((annotation) =>
-          annotation.id === annotationId
-            ? {
-                ...annotation,
-                responses: annotation.responses.map((response) =>
-                  response.id === responseId
-                    ? { ...response, feedback: newFeedback }
-                    : response
-                ),
-              }
-            : annotation
-        );
-
+        const newAnnotations = [...prevAnnotations];
+        const annotation = newAnnotations[currentIndex];
+        if (annotation) {
+          annotation.responses = annotation.responses.map((response) =>
+            response.id === resultId
+              ? { ...response, feedback: newFeedback }
+              : response
+          );
+        }
         return newAnnotations;
       });
     },
-    []
+    [annotations, currentIndex]
   );
 
   const handleError = useCallback((errorMessage: string) => {
@@ -156,6 +149,8 @@ const Annotations: React.FC = () => {
   if (isLoading) {
     return <div className="annotations-container loading">Loading...</div>;
   }
+
+  const currentAnnotation = annotations[currentIndex];
 
   return (
     <div
@@ -170,44 +165,28 @@ const Annotations: React.FC = () => {
       <BackButton to="/" />
 
       <div className="content-wrapper">
-        <div
-          className="annotation-boxes"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {annotations.map((annotation) => (
-            <div key={annotation.id} className="annotation-box">
-              <div className="prompt-section">
-                <div className="prompt-title">{annotation.prompt}</div>
-                {annotation.metadata?.link && (
-                  <a
-                    href={annotation.metadata.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="metadata-link"
-                  >
-                    View Property Details →
-                  </a>
-                )}
-              </div>
-              <div className="responses-section">
-                {annotation.responses.map((response) => (
-                  <ResponseBox
-                    key={response.id}
-                    title={response.title}
-                    text={response.text}
-                    feedback={response.feedback}
-                    prompt_id={annotation.id}
-                    response_id={response.id}
-                    onFeedbackChange={(feedback) =>
-                      handleFeedbackChange(annotation.id, response.id, feedback)
-                    }
-                    onError={handleError}
-                  />
-                ))}
-              </div>
+        {currentAnnotation && (
+          <div className="annotation-box">
+            <div className="prompt-section">
+              <div className="prompt-title">{currentAnnotation.prompt}</div>
+              {currentAnnotation.metadata?.link && (
+                <a
+                  href={currentAnnotation.metadata.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="metadata-link"
+                >
+                  View Property Details →
+                </a>
+              )}
             </div>
-          ))}
-        </div>
+            <ResponseList
+              results={currentAnnotation.responses}
+              onFeedbackChange={handleFeedbackChange}
+              onError={handleError}
+            />
+          </div>
+        )}
       </div>
 
       <div className="navigation-wrapper">

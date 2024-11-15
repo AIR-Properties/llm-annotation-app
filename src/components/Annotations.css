@@ -21,20 +21,31 @@
 
 .content-wrapper {
   flex: 1;
-  overflow: hidden;
   position: relative;
   margin-top: 60px;
+  overflow: hidden;
 }
 
 .annotation-boxes {
-  display: flex;
-  transition: transform 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
+  transition: transform 0.3s ease;
+  will-change: transform;
 }
 
 .annotation-box {
-  min-width: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 20px;
   box-sizing: border-box;
+  overscroll-behavior: contain;
 }
 
 .prompt-section {
@@ -68,16 +79,6 @@
 .metadata-link:hover {
   background-color: #0084ff;
   color: white;
-}
-
-.responses-section {
-  background-color: #f7fdf9;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #e0f2e9;
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 20px;
 }
 
 .navigation-wrapper {

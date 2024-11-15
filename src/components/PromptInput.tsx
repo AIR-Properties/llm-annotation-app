@@ -33,6 +33,16 @@ const PromptInput: React.FC<PromptInputProps> = ({
     }
   }, [onError]);
 
+  const handlePasteToPrompt = useCallback(async (): Promise<void> => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setPrompt(text);
+    } catch (err) {
+      console.error("Failed to read clipboard contents:", err);
+      onError(ERROR_MESSAGES.CLIPBOARD_ERROR);
+    }
+  }, [onError]);
+
   const handleSubmit = useCallback(async (): Promise<void> => {
     if (!prompt.trim()) return;
     await onSubmit(prompt.trim(), propertyLink.trim());
@@ -72,13 +82,22 @@ const PromptInput: React.FC<PromptInputProps> = ({
         <label className="input-label" htmlFor="prompt">
           Prompt
         </label>
-        <textarea
-          id="prompt"
-          value={prompt}
-          onChange={handlePromptChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Enter your prompt here..."
-        />
+        <div className="input-row">
+          <textarea
+            id="prompt"
+            value={prompt}
+            onChange={handlePromptChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Enter your prompt here..."
+          />
+          <button
+            className="paste-button"
+            onClick={handlePasteToPrompt}
+            title="Paste to prompt"
+          >
+            📋
+          </button>
+        </div>
       </div>
       <div className="input-group">
         <label className="input-label" htmlFor="property-link">

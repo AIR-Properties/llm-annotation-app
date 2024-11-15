@@ -6,7 +6,7 @@ import BackButton from "./BackButton";
 import { annotationService, APIError } from "../services/api";
 import { mapAskResponseToDomain } from "../utils/mappers";
 import { ERROR_MESSAGES } from "../constants/messages";
-import { Response as DomainResponse } from "../types/domain";
+import { Response as DomainResponse, FeedbackType } from "../types/domain";
 import { getUserName } from "../utils/auth";
 import "./LLMResponses.css";
 
@@ -49,6 +49,50 @@ const LLMResponses: React.FC = () => {
     []
   );
 
+  const handleFeedbackChange = useCallback(
+    async (resultId: string, feedback: FeedbackType | undefined) => {
+      try {
+        const username = getUserName();
+        if (!username || !feedback) {
+          setError("User not authenticated or invalid feedback");
+          return;
+        }
+
+        // Update local state immediately for better UX
+        setResults((prevResults) =>
+          prevResults.map((result) =>
+            result.id === resultId ? { ...result, feedback } : result
+          )
+        );
+
+        // Find the prompt_id for the result
+        const result = results.find((r) => r.id === resultId);
+        if (!result) {
+          setError("Response not found");
+          return;
+        }
+
+        // Submit feedback to server
+        await annotationService.submitFeedback({
+          prompt_id: result.prompt_id,
+          response_id: resultId,
+          feedback,
+          username,
+        });
+      } catch (err) {
+        console.error("Error submitting feedback:", err);
+        if (err instanceof APIError) {
+          setError(ERROR_MESSAGES.REQUEST_FAILED(err.message));
+        } else if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError(ERROR_MESSAGES.UNEXPECTED_ERROR);
+        }
+      }
+    },
+    [results]
+  );
+
   const handleError = useCallback((errorMessage: string) => {
     setError(errorMessage);
   }, []);
@@ -64,7 +108,11 @@ const LLMResponses: React.FC = () => {
         isLoading={isLoading}
         onError={handleError}
       />
-      <ResponseList results={results} onError={handleError} />
+      <ResponseList
+        results={results}
+        onFeedbackChange={handleFeedbackChange}
+        onError={handleError}
+      />
     </div>
   );
 };

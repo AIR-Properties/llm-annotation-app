@@ -1,12 +1,13 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { annotationService } from "../services/api";
 import { getUserName } from "../utils/auth";
+import CopyIcon from "./CopyIcon";
 import "./ResponseBox.css";
 
 interface ResponseBoxProps {
   title: string;
   text: string;
-  feedback?: "helpful" | "not_helpful" | "neutral" | undefined;
+  feedback?: "helpful" | "not_helpful" | "neutral";
   prompt_id: string;
   response_id: string;
   onFeedbackChange?: (
@@ -24,6 +25,8 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
   onFeedbackChange,
   onError,
 }) => {
+  const [showCopied, setShowCopied] = useState(false);
+
   const handleFeedback = useCallback(
     async (newFeedback: "helpful" | "not_helpful" | "neutral") => {
       try {
@@ -50,9 +53,34 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
     [prompt_id, response_id, onFeedbackChange, onError]
   );
 
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text:", err);
+      onError?.("Failed to copy text to clipboard");
+    }
+  }, [text, onError]);
+
   return (
     <div className="response-box">
-      <div className="response-box-title">{title}</div>
+      <div className="response-box-header">
+        <div className="response-box-title">{title}</div>
+        <div className="copy-wrapper">
+          <button
+            className="copy-button"
+            onClick={handleCopy}
+            title="Copy response"
+          >
+            <span className="copy-icon">
+              <CopyIcon />
+            </span>
+            <span className="copy-text">{showCopied ? "Copied!" : "Copy"}</span>
+          </button>
+        </div>
+      </div>
       <div className="response-box-text">{text}</div>
       <div className="response-box-buttons">
         <button

@@ -31,6 +31,7 @@
   gap: 10px;
   align-items: flex-start;
   margin-bottom: 10px;
+  position: relative;
 }
 
 .input-label {
@@ -127,7 +128,8 @@
   border-color: #fca5a5;
 }
 
-.paste-button {
+/* Paste button for property link */
+.input-row input[type="text"] ~ .paste-button {
   background-color: #f0fdf4;
   border: 1px solid #bbf7d0;
   color: #16a34a;
@@ -140,9 +142,25 @@
   white-space: nowrap;
 }
 
-.paste-button:hover {
+.input-row input[type="text"] ~ .paste-button:hover {
   background-color: #dcfce7;
   border-color: #86efac;
+}
+
+/* Paste button for prompt textarea */
+.input-row textarea + .paste-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  color: #2d5b9e;
+}
+
+.input-row textarea + .paste-button:hover {
+  background-color: #e1effe;
 }
 
 .responses-section {
