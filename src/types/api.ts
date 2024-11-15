@@ -5,10 +5,12 @@ export interface AskRequest {
   username: string;
 }
 
+export type FeedbackType = "helpful" | "not_helpful" | "neutral";
+
 export interface FeedbackRequest {
   prompt_id: string;
   response_id: string;
-  feedback: string;
+  feedback: FeedbackType;
   username: string;
 }
 

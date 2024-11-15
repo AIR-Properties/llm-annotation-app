@@ -6,13 +6,13 @@ import Footer from "./Footer";
 import { annotationService, APIError } from "../services/api";
 import { mapAnnotationsToDomain } from "../utils/mappers";
 import { ERROR_MESSAGES } from "../constants/messages";
-import { Response as DomainResponse } from "../types/domain";
+import { Response as DomainResponse, FeedbackType } from "../types/domain";
 import { SAMPLE_ANNOTATIONS } from "../data/sampleData";
 import { getUserName } from "../utils/auth";
 import "./Annotations.css";
 
 interface AnnotationResponse extends DomainResponse {
-  feedback?: "helpful" | "not_helpful";
+  feedback?: FeedbackType;
 }
 
 interface AnnotationBox {
@@ -121,7 +121,7 @@ const Annotations: React.FC = () => {
     (
       annotationId: string,
       responseId: string,
-      newFeedback: "helpful" | "not_helpful" | undefined
+      newFeedback: FeedbackType | undefined
     ) => {
       setAnnotations((prevAnnotations) => {
         const newAnnotations = prevAnnotations.map((annotation) =>

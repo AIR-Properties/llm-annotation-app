@@ -68,6 +68,17 @@
     color: white;
 }
 
+.response-box-button.neutral {
+    color: #6B7280;
+    border: 2px solid #6B7280;
+}
+
+.response-box-button.neutral:hover,
+.response-box-button.neutral.selected {
+    background-color: #6B7280;
+    color: white;
+}
+
 .response-box-button.not-helpful {
     color: #f97316;
     border: 2px solid #f97316;

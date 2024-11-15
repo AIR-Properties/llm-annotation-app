@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, KeyboardEvent } from "react";
 import { ERROR_MESSAGES } from "../constants/messages";
 
 interface PromptInputProps {
@@ -36,8 +36,17 @@ const PromptInput: React.FC<PromptInputProps> = ({
   const handleSubmit = useCallback(async (): Promise<void> => {
     if (!prompt.trim()) return;
     await onSubmit(prompt.trim(), propertyLink.trim());
-    setPrompt("");
   }, [prompt, propertyLink, onSubmit]);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLTextAreaElement>): void => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        e.preventDefault();
+        handleSubmit();
+      }
+    },
+    [handleSubmit]
+  );
 
   const handlePromptChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -67,6 +76,7 @@ const PromptInput: React.FC<PromptInputProps> = ({
           id="prompt"
           value={prompt}
           onChange={handlePromptChange}
+          onKeyDown={handleKeyDown}
           placeholder="Enter your prompt here..."
         />
       </div>

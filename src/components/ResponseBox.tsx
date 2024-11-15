@@ -6,10 +6,12 @@ import "./ResponseBox.css";
 interface ResponseBoxProps {
   title: string;
   text: string;
-  feedback?: "helpful" | "not_helpful";
+  feedback?: "helpful" | "not_helpful" | "neutral" | undefined;
   prompt_id: string;
   response_id: string;
-  onFeedbackChange?: (feedback: "helpful" | "not_helpful" | undefined) => void;
+  onFeedbackChange?: (
+    feedback: "helpful" | "not_helpful" | "neutral" | undefined
+  ) => void;
   onError?: (error: string) => void;
 }
 
@@ -23,7 +25,7 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
   onError,
 }) => {
   const handleFeedback = useCallback(
-    async (newFeedback: "helpful" | "not_helpful") => {
+    async (newFeedback: "helpful" | "not_helpful" | "neutral") => {
       try {
         const username = getUserName();
         if (!username) {
@@ -61,6 +63,15 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
           disabled={feedback !== undefined}
         >
           Mark as Helpful
+        </button>
+        <button
+          className={`response-box-button neutral ${
+            feedback === "neutral" ? "selected" : ""
+          }`}
+          onClick={() => handleFeedback("neutral")}
+          disabled={feedback !== undefined}
+        >
+          Mark as Neutral
         </button>
         <button
           className={`response-box-button not-helpful ${

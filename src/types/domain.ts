@@ -1,4 +1,4 @@
-export type FeedbackType = "helpful" | "not_helpful";
+export type FeedbackType = "helpful" | "not_helpful" | "neutral";
 
 export interface Response {
   id: string;
