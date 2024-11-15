@@ -44,7 +44,6 @@
   flex: 1;
   overflow: hidden;
   position: relative;
-  margin-top: 60px;
 }
 
 .annotation-boxes {
@@ -55,7 +54,6 @@
 
 .annotation-box {
   min-width: 100%;
-  padding: 20px;
   box-sizing: border-box;
 }
 
@@ -65,6 +63,7 @@
   border-radius: 8px;
   border: 1px solid #e1effe;
   margin-bottom: 30px;
+  margin-top: 60px;
 }
 
 .prompt-title {
@@ -148,10 +147,6 @@
     border-radius: 0;
     box-shadow: none;
     min-height: 100vh;
-  }
-
-  .annotation-box {
-    padding: 15px;
   }
 
   .back-button {
