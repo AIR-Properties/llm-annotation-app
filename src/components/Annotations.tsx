@@ -1,12 +1,16 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ResponseBox from "./ResponseBox";
 import Toast from "./Toast";
 import Footer from "./Footer";
 import { annotationService, APIError } from "../services/api";
 import { mapAnnotationsToDomain } from "../utils/mappers";
 import { ERROR_MESSAGES } from "../constants/messages";
-import { Response as DomainResponse, FeedbackType } from "../types/domain";
+import {
+  Response as DomainResponse,
+  FeedbackType,
+  Metadata,
+} from "../types/domain";
 import { SAMPLE_ANNOTATIONS } from "../data/sampleData";
 import { getUserName } from "../utils/auth";
 import "./Annotations.css";
@@ -18,12 +22,15 @@ interface AnnotationResponse extends DomainResponse {
 interface AnnotationBox {
   id: string;
   title: string;
+  prompt: string;
+  metadata?: Metadata;
   responses: AnnotationResponse[];
   isExpanded: boolean;
   isClosing?: boolean;
 }
 
 const Annotations: React.FC = () => {
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [annotations, setAnnotations] = useState<AnnotationBox[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -147,6 +154,10 @@ const Annotations: React.FC = () => {
     setError(errorMessage);
   }, []);
 
+  const handleBack = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
+
   if (isLoading) {
     return <div className="annotations-container loading">Loading...</div>;
   }
@@ -161,9 +172,9 @@ const Annotations: React.FC = () => {
       {error && (
         <Toast message={error} type="error" onClose={() => setError(null)} />
       )}
-      <Link to="/" className="back-button">
+      <button onClick={handleBack} className="back-button">
         ← Back
-      </Link>
+      </button>
 
       <div className="content-wrapper">
         <div
@@ -172,7 +183,19 @@ const Annotations: React.FC = () => {
         >
           {annotations.map((annotation) => (
             <div key={annotation.id} className="annotation-box">
-              <div className="prompt-title">{annotation.title}</div>
+              <div className="prompt-section">
+                <div className="prompt-title">{annotation.prompt}</div>
+                {annotation.metadata?.link && (
+                  <a
+                    href={annotation.metadata.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="metadata-link"
+                  >
+                    View Property Details →
+                  </a>
+                )}
+              </div>
               <div className="responses-section">
                 {annotation.responses.map((response) => (
                   <ResponseBox

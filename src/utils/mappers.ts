@@ -29,6 +29,11 @@ export function mapAskResponseToDomain(
 interface MappedAnnotation {
   id: string;
   title: string;
+  prompt: string;
+  metadata?: {
+    link?: string;
+    [key: string]: any;
+  };
   responses: UIResponse[];
 }
 
@@ -39,6 +44,8 @@ export function mapAnnotationsToDomain(
     (prompt: AnnotationPrompt): MappedAnnotation => ({
       id: prompt.id,
       title: prompt.prompt,
+      prompt: prompt.prompt,
+      metadata: prompt.metadata,
       responses: prompt.responses.map((response: AnnotationResponse) => ({
         id: response.id,
         title: response.title,

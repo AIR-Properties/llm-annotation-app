@@ -1,5 +1,10 @@
 export type FeedbackType = "helpful" | "not_helpful" | "neutral";
 
+export interface Metadata {
+  link?: string;
+  [key: string]: any;
+}
+
 export interface Response {
   id: string;
   title: string;
@@ -16,6 +21,7 @@ export interface Prompt {
   id: string;
   text: string;
   propertyLink?: string;
+  metadata?: Metadata;
 }
 
 // State types

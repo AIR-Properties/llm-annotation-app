@@ -46,9 +46,15 @@ export interface AnnotationResponse {
   text: string;
 }
 
+export interface Metadata {
+  link?: string;
+  [key: string]: any;
+}
+
 export interface AnnotationPrompt {
   id: string;
   prompt: string;
+  metadata?: Metadata;
   responses: AnnotationResponse[];
 }
 

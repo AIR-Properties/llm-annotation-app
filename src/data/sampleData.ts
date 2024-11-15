@@ -31,6 +31,9 @@ export const SAMPLE_ANNOTATIONS = {
       id: "prompt_1",
       prompt:
         "What are the key features and amenities of this property that make it stand out in the luxury real estate market? Please provide a detailed analysis of its unique selling points and how they compare to similar properties in the area.",
+      metadata: {
+        link: "https://www.propertyfinder.ae/en/property/luxury-villa-palm-jumeirah",
+      },
       responses: [
         {
           id: "response_1_1",
@@ -48,6 +51,10 @@ export const SAMPLE_ANNOTATIONS = {
       id: "prompt_2",
       prompt:
         "Can you describe the neighborhood and surrounding area of this property, including nearby amenities, schools, and transportation options? Please provide specific details about the community and its appeal to potential buyers.",
+      metadata: {
+        link: "https://www.propertyfinder.ae/en/area-guide/downtown-dubai",
+        additionalInfo: "Downtown Dubai Community Guide",
+      },
       responses: [
         {
           id: "response_2_1",
