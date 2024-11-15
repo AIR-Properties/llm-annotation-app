@@ -1,0 +1,9 @@
+.responses-section {
+  background-color: #f7fdf9;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0f2e9;
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
