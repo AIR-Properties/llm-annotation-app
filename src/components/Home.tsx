@@ -67,6 +67,12 @@ const Home: React.FC = () => {
           >
             Annotation
           </button>
+          <button
+            className="nav-button"
+            onClick={() => handleNavigate("/arena")}
+          >
+            Arena
+          </button>
         </div>
       </div>
       <Footer />

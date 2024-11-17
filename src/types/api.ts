@@ -5,12 +5,19 @@ export interface AskRequest {
   username: string;
 }
 
-export type FeedbackType = "helpful" | "not_helpful" | "neutral";
+export type FeedbackType =
+  | "helpful"
+  | "not_helpful"
+  | "neutral"
+  | "perfect"
+  | "like"
+  | "skip";
 
 export interface FeedbackRequest {
   prompt_id: string;
   response_id: string;
   feedback: FeedbackType;
+  feedback_text?: string;
   username: string;
 }
 
@@ -38,12 +45,14 @@ export interface AskResponse {
 export interface FeedbackResponse {
   success: boolean;
   message?: string;
+  new_response?: AnnotationResponse;
 }
 
 export interface AnnotationResponse {
   id: string;
   title: string;
   text: string;
+  timestamp: string;
 }
 
 export interface Metadata {
@@ -58,7 +67,22 @@ export interface AnnotationPrompt {
   responses: AnnotationResponse[];
 }
 
+export interface AnnotationChatMessage {
+  id: string;
+  type: "response" | "feedback";
+  content: string;
+  timestamp: string;
+}
+
+export interface NewAnnotationResponse {
+  prompt_id: string;
+  prompt: string;
+  metadata?: Metadata;
+  response: AnnotationResponse;
+}
+
 export type AnnotationsResponse = APIResponse<AnnotationPrompt[]>;
+export type NewAnnotationsResponse = APIResponse<NewAnnotationResponse[]>;
 
 // Type guards
 export function isAPIError(error: unknown): error is APIError {

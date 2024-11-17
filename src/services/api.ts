@@ -6,6 +6,7 @@ import {
   FeedbackResponse,
   AnnotationsResponse,
   GetAnnotationsRequest,
+  NewAnnotationsResponse,
 } from "../types/api";
 import { ERROR_MESSAGES } from "../constants/messages";
 
@@ -68,7 +69,28 @@ export const annotationService = {
     request: GetAnnotationsRequest
   ): Promise<AnnotationsResponse> => {
     return makeRequest<AnnotationsResponse>(
-      API_CONFIG.ENDPOINTS.DATA,
+      API_CONFIG.ENDPOINTS.ARENA_DATA,
+      "POST",
+      request
+    );
+  },
+
+  getNewAnnotations: async (
+    request: GetAnnotationsRequest
+  ): Promise<NewAnnotationsResponse> => {
+    return makeRequest<NewAnnotationsResponse>(
+      API_CONFIG.ENDPOINTS.ANNOTATION,
+      "POST",
+      request
+    );
+  },
+
+  submitAnnotationFeedback: async (
+    request: FeedbackRequest
+  ): Promise<FeedbackResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Add delay
+    return makeRequest<FeedbackResponse>(
+      API_CONFIG.ENDPOINTS.ANNOTATION_SUBMIT,
       "POST",
       request
     );
