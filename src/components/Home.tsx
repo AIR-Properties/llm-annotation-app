@@ -67,13 +67,13 @@ const Home: React.FC = () => {
             className="nav-button"
             onClick={() => handleNavigate("/llm-responses")}
           >
-            Ask Questions (Advisory)
+            Ask Questions 
           </button>
           <button
             className="nav-button"
             onClick={() => handleNavigate("/annotations")}
           >
-            Feedback and Annotation
+            Review and Annotate
           </button>
         </div>
       </div>
