@@ -44,11 +44,14 @@ const Home: React.FC = () => {
           className={`air-logo ${isLoaded ? "loaded" : ""}`}
           onLoad={() => setIsLoaded(true)}
         />
-        <p className="description">
-          You can review Advisory capability of AIR, and compare quality of
-          answers to mainstream LLMs, by either asking your own questions or
-          reviewing examples.
-        </p>
+        <div className="description-box">
+          <i className="info-icon">i</i>
+          <p className="description">
+            You can review Advisory capability of AIR, and compare quality of
+            answers to mainstream LLMs, by either asking your own questions or
+            reviewing examples.
+          </p>
+        </div>
         <div className="name-input-container">
           <input
             type="text"
@@ -64,13 +67,13 @@ const Home: React.FC = () => {
             className="nav-button"
             onClick={() => handleNavigate("/llm-responses")}
           >
-            Ask Questions
+            Ask Questions (Advisory)
           </button>
           <button
             className="nav-button"
             onClick={() => handleNavigate("/annotations")}
           >
-            Review and Annotate
+            Feedback and Annotation
           </button>
         </div>
       </div>
