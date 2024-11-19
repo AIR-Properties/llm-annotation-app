@@ -1,0 +1,137 @@
+.arena-container {
+  width: 90%;
+  max-width: 700px;
+  background-color: #ffffff;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  position: relative;
+  margin: 40px auto;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+}
+
+.arena-container.loading {
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  color: #666;
+}
+
+.content-wrapper {
+  flex: 1;
+  position: relative;
+  margin-top: 60px;
+  overflow: hidden;
+}
+
+.arena-boxes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.arena-box {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 20px;
+  box-sizing: border-box;
+  overscroll-behavior: contain;
+}
+
+.prompt-section {
+  background-color: #f0f7ff;
+  padding: 25px;
+  border-radius: 8px;
+  border: 1px solid #e1effe;
+  margin-bottom: 30px;
+  margin-top: 60px;
+}
+
+.prompt-title {
+  font-size: 1.1em;
+  color: #2d5b9e;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.metadata-link {
+  display: inline-block;
+  color: #0084ff;
+  text-decoration: none;
+  font-size: 0.9em;
+  margin-top: 12px;
+  padding: 6px 12px;
+  border: 1px solid #0084ff;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.metadata-link:hover {
+  background-color: #0084ff;
+  color: white;
+}
+
+.navigation-wrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.navigation-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-button {
+  padding: 8px 16px;
+  background-color: #0084ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  font-weight: bold;
+}
+
+.nav-button:hover:not(:disabled) {
+  background-color: #0066cc;
+}
+
+.nav-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.prompt-counter {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+@media screen and (max-width: 768px) {
+  .arena-container {
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
+  }
+
+  .nav-button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
