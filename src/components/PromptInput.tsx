@@ -80,7 +80,7 @@ const PromptInput: React.FC<PromptInputProps> = ({
     <div className="input-section">
       <div className="input-group">
         <label className="input-label" htmlFor="prompt">
-          Prompt
+          Ask Question
         </label>
         <div className="input-row">
           <textarea
@@ -88,7 +88,7 @@ const PromptInput: React.FC<PromptInputProps> = ({
             value={prompt}
             onChange={handlePromptChange}
             onKeyDown={handleKeyDown}
-            placeholder="Enter your prompt here..."
+            placeholder="Ask your question about the property (property link is below)..."
           />
           <button
             className="paste-button"

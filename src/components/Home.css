@@ -28,7 +28,7 @@ h1 {
 .air-logo {
     width: 120px;
     height: auto;
-    margin: 1rem 0 2rem 0;
+    margin: 3rem 0 2rem 0;
     opacity: 0;
     transform: scale(0.8);
 }
@@ -170,4 +170,14 @@ h1 {
         width: 100%;
         text-align: center;
     }
+}
+
+.description {
+    width: 50%;
+    text-align: center;
+    margin: 10px auto 10px auto; /* Added top margin for spacing */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.6s;
 }
