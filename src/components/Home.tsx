@@ -48,7 +48,6 @@ const Home: React.FC = () => {
           You can review Advisory capability of AIR, and compare quality of
           answers to mainstream LLMs, by either asking your own questions or
           reviewing examples.
-          <br></br>
         </p>
         <div className="name-input-container">
           <input
@@ -71,7 +70,7 @@ const Home: React.FC = () => {
             className="nav-button"
             onClick={() => handleNavigate("/annotations")}
           >
-            Feedback and Annotation
+            Review and Annotate
           </button>
         </div>
       </div>
