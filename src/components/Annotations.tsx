@@ -135,7 +135,7 @@ const Annotations: React.FC = () => {
         ]);
         await annotationService.submitAnnotationFeedback({
           prompt_id: currentPrompt.prompt_id,
-          response_id: currentPrompt.response.id,
+          answer_id: currentPrompt.response.id,
           feedback,
           username: getUserName() || "",
         });
@@ -197,9 +197,8 @@ const Annotations: React.FC = () => {
 
         const response = await annotationService.submitAnnotationFeedback({
           prompt_id: currentPrompt.prompt_id,
-          response_id: currentPrompt.response.id,
-          feedback: "not_helpful",
-          feedback_text: text,
+          answer_id: currentPrompt.response.id,
+          message: text,
           username: getUserName() || "",
         });
 

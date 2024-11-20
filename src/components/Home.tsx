@@ -67,7 +67,7 @@ const Home: React.FC = () => {
             className="nav-button"
             onClick={() => handleNavigate("/llm-responses")}
           >
-            Ask Questions 
+            Ask Questions
           </button>
           <button
             className="nav-button"

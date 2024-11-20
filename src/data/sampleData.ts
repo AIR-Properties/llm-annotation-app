@@ -6,21 +6,21 @@ export const SAMPLE_RESULTS: UIResponse[] = [
     title: "LLM Result 1",
     text: "This is a sample answer from LLM 1. It provides a detailed explanation of the query.",
     prompt_id: "sample_1",
-    response_id: "response_1",
+    answer_id: "response_1",
   },
   {
     id: "response_2",
     title: "LLM Result 2",
     text: "This is a sample answer from LLM 2. It offers insights and possible solutions.",
     prompt_id: "sample_1",
-    response_id: "response_2",
+    answer_id: "response_2",
   },
   {
     id: "response_3",
     title: "LLM Result 3",
     text: "This is a sample answer from LLM 3. It discusses various aspects of the topic.",
     prompt_id: "sample_1",
-    response_id: "response_3",
+    answer_id: "response_3",
   },
 ];
 

@@ -3,10 +3,10 @@ const API_CONFIG = {
   BASE_URL: process.env.REACT_APP_API_URL,
   ENDPOINTS: {
     ASK: "/annotation/ask",
-    FEEDBACK: "/arena/feedback",
-    ARENA_DATA: "/arena/data",
+    FEEDBACK: "/annotation/feedback",
+    ARENA_DATA: "/airena/data",
     ANNOTATION: "/annotation/data",
-    ANNOTATION_SUBMIT: "/annotation/feedback/submit",
+    ANNOTATION_SUBMIT: "/annotation/feedback",
   },
   DEFAULT_HEADERS: {
     "Content-Type": "application/json",

@@ -15,9 +15,9 @@ export type FeedbackType =
 
 export interface FeedbackRequest {
   prompt_id: string;
-  response_id: string;
-  feedback: FeedbackType;
-  feedback_text?: string;
+  answer_id: string;
+  feedback?: FeedbackType;
+  message?: string;
   username: string;
 }
 

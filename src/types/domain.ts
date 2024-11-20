@@ -10,7 +10,7 @@ export interface Response {
   title: string;
   text: string;
   prompt_id: string;
-  response_id: string;
+  answer_id: string;
 }
 
 export interface UIResponse extends Response {

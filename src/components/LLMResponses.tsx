@@ -75,7 +75,7 @@ const LLMResponses: React.FC = () => {
         // Submit feedback to server
         await annotationService.submitFeedback({
           prompt_id: result.prompt_id,
-          response_id: resultId,
+          answer_id: resultId,
           feedback,
           username,
         });

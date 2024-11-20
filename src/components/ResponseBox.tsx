@@ -9,7 +9,7 @@ interface ResponseBoxProps {
   text: string;
   feedback?: "helpful" | "not_helpful" | "neutral";
   prompt_id: string;
-  response_id: string;
+  answer_id: string;
   onFeedbackChange?: (
     feedback: "helpful" | "not_helpful" | "neutral" | undefined
   ) => void;
@@ -21,7 +21,7 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
   text,
   feedback,
   prompt_id,
-  response_id,
+  answer_id,
   onFeedbackChange,
   onError,
 }) => {
@@ -38,7 +38,7 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
 
         await annotationService.submitFeedback({
           prompt_id,
-          response_id,
+          answer_id,
           feedback: newFeedback,
           username,
         });
@@ -50,7 +50,7 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
         );
       }
     },
-    [prompt_id, response_id, onFeedbackChange, onError]
+    [prompt_id, answer_id, onFeedbackChange, onError]
   );
 
   const handleCopy = useCallback(async () => {
