@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     background-color: #f8fafc;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .content {
@@ -18,7 +19,7 @@
 h1 {
     color: #1e293b;
     font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem; /* Reduced space */
     text-align: center;
     opacity: 0;
     transform: translateY(-20px);
@@ -28,7 +29,7 @@ h1 {
 .air-logo {
     width: 120px;
     height: auto;
-    margin: 1rem 0 2rem 0;
+    margin: 0.5rem 0 1rem 0; /* Reduced space */
     opacity: 0;
     transform: scale(0.8);
 }
@@ -38,10 +39,23 @@ h1 {
     animation-delay: 0.3s;
 }
 
+.description-box {
+    width: 50%;
+    background-color: #e0f7fa;
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    margin: 1rem auto 2rem auto; /* Increased space below */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.6s;
+}
+
 .name-input-container {
     width: 100%;
     max-width: 300px;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem; /* Increased space */
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease forwards;
@@ -170,4 +184,22 @@ h1 {
         width: 100%;
         text-align: center;
     }
+
+    .description-box {
+        width: 90%; /* Adjust width for mobile view */
+    }
+}
+
+.description {
+    font-size: 0.9rem; /* Smaller font size */
+    color: #00796b; /* Darker text color for contrast */
+    margin: 0;
+}
+
+.info-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.2rem;
+    color: #00796b; /* Match text color */
 }

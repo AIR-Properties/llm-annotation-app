@@ -44,6 +44,14 @@ const Home: React.FC = () => {
           className={`air-logo ${isLoaded ? "loaded" : ""}`}
           onLoad={() => setIsLoaded(true)}
         />
+        <div className="description-box">
+          <i className="info-icon">i</i>
+          <p className="description">
+            You can review Advisory capability of AIR, and compare quality of
+            answers to mainstream LLMs, by either asking your own questions or
+            reviewing examples.
+          </p>
+        </div>
         <div className="name-input-container">
           <input
             type="text"
@@ -59,13 +67,13 @@ const Home: React.FC = () => {
             className="nav-button"
             onClick={() => handleNavigate("/llm-responses")}
           >
-            Ask and Feedback
+            Ask Questions 
           </button>
           <button
             className="nav-button"
             onClick={() => handleNavigate("/annotations")}
           >
-            Annotation
+            Review and Annotate
           </button>
           <button
             className="nav-button"
