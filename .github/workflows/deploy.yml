@@ -23,7 +23,8 @@ jobs:
         envs: REACT_APP_API_URL
         script: |
           cd ${{ secrets.APP_PATH }}
-          git pull origin main
+          git checkout old-stable
+          git pull old-stable
           echo "Building with REACT_APP_API_URL=${{secrets.REACT_APP_API_URL}}"
           docker build \
             --build-arg REACT_APP_API_URL="${{secrets.REACT_APP_API_URL}}" \
