@@ -52,7 +52,7 @@ export interface AnnotationResponse {
   id: string;
   title: string;
   text: string;
-  timestamp: string;
+  created_at: string;
 }
 
 export interface Metadata {

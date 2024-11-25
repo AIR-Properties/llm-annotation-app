@@ -10,7 +10,7 @@ interface ChatMessage {
   id: string;
   type: "response" | "feedback" | "error" | "typing";
   content: string;
-  timestamp: string;
+  created_at: string;
   feedbackText?: string;
 }
 
@@ -40,7 +40,7 @@ const Annotations: React.FC = () => {
         id: `error-${Date.now()}`,
         type: "error",
         content: "Sorry, there was an issue. Try again.",
-        timestamp: new Date().toISOString(),
+        created_at: new Date().toISOString(),
         feedbackText,
       },
     ]);
@@ -60,7 +60,7 @@ const Annotations: React.FC = () => {
             id: latestAirResponse.id,
             type: "response",
             content: latestAirResponse.text,
-            timestamp: latestAirResponse.timestamp,
+            created_at: latestAirResponse.created_at,
           },
         ]);
       }
@@ -70,7 +70,7 @@ const Annotations: React.FC = () => {
           id: "end",
           type: "response",
           content: "No more prompts available.",
-          timestamp: new Date().toISOString(),
+          created_at: new Date().toISOString(),
         },
       ]);
     }
@@ -101,7 +101,7 @@ const Annotations: React.FC = () => {
                 id: latestAirResponse.id,
                 type: "response",
                 content: latestAirResponse.text,
-                timestamp: latestAirResponse.timestamp,
+                created_at: latestAirResponse.created_at,
               },
             ]);
           }
@@ -121,7 +121,7 @@ const Annotations: React.FC = () => {
                 id: latestAirResponse.id,
                 type: "response",
                 content: latestAirResponse.text,
-                timestamp: latestAirResponse.timestamp,
+                created_at: latestAirResponse.created_at,
               },
             ]);
           }
@@ -146,7 +146,7 @@ const Annotations: React.FC = () => {
             id: `typing-${Date.now()}`,
             type: "typing",
             content: "",
-            timestamp: new Date().toISOString(),
+            created_at: new Date().toISOString(),
           },
         ]);
 
@@ -174,7 +174,7 @@ const Annotations: React.FC = () => {
                 : feedback === "like"
                 ? "Liked 👍"
                 : "",
-            timestamp: new Date().toISOString(),
+            created_at: new Date().toISOString(),
           },
         ]);
 
@@ -199,7 +199,7 @@ const Annotations: React.FC = () => {
           id: messageId,
           type: "feedback",
           content: text,
-          timestamp: new Date().toISOString(),
+          created_at: new Date().toISOString(),
           feedbackText: text,
         },
       ]);
@@ -212,7 +212,7 @@ const Annotations: React.FC = () => {
             id: `typing-${Date.now()}`,
             type: "typing",
             content: "",
-            timestamp: new Date().toISOString(),
+            created_at: new Date().toISOString(),
           },
         ]);
 
@@ -238,7 +238,7 @@ const Annotations: React.FC = () => {
                 id: `response-${Date.now()}`,
                 type: "response",
                 content: response.message,
-                timestamp: new Date().toISOString(),
+                created_at: new Date().toISOString(),
               } as ChatMessage,
             ]);
           }
@@ -323,7 +323,7 @@ const Annotations: React.FC = () => {
                   )}
                 </div>
                 <div className="message-timestamp">
-                  {new Date(message.timestamp).toLocaleTimeString()}
+                  {new Date(message.created_at).toLocaleTimeString()}
                 </div>
                 {message.type === "error" && message.feedbackText && (
                   <button

@@ -7,6 +7,7 @@ export const SAMPLE_RESULTS: UIResponse[] = [
     text: "This is a sample answer from LLM 1. It provides a detailed explanation of the query.",
     prompt_id: "sample_1",
     answer_id: "response_1",
+    created_at: new Date().toISOString(),
   },
   {
     id: "response_2",
@@ -14,6 +15,7 @@ export const SAMPLE_RESULTS: UIResponse[] = [
     text: "This is a sample answer from LLM 2. It offers insights and possible solutions.",
     prompt_id: "sample_1",
     answer_id: "response_2",
+    created_at: new Date().toISOString(),
   },
   {
     id: "response_3",
@@ -21,6 +23,7 @@ export const SAMPLE_RESULTS: UIResponse[] = [
     text: "This is a sample answer from LLM 3. It discusses various aspects of the topic.",
     prompt_id: "sample_1",
     answer_id: "response_3",
+    created_at: new Date().toISOString(),
   },
 ];
 
@@ -39,13 +42,13 @@ export const SAMPLE_ANNOTATIONS = {
           id: "response_1_1",
           title: "Comprehensive Analysis",
           text: "This luxury property stands out with its exceptional features including a state-of-the-art smart home system, integrated throughout the residence. The property boasts a 1,000-square-foot master suite with panoramic ocean views, a private terrace, and a spa-like bathroom featuring heated floors and a freestanding soaking tub. The gourmet kitchen is equipped with top-of-the-line appliances and custom cabinetry, making it perfect for both everyday use and entertaining.",
-          timestamp: new Date().toISOString(),
+          created_at: new Date().toISOString(),
         },
         {
           id: "response_1_2",
           title: "Market Comparison",
           text: "Compared to similar properties in the area, this residence offers unique advantages such as its prime location with direct beach access and unobstructed ocean views. The property includes a private infinity pool and landscaped gardens, features found in only 15% of luxury homes in this market. The dedicated home theater and wine cellar add significant value, while the four-car garage with electric vehicle charging stations appeals to modern luxury buyers.",
-          timestamp: new Date().toISOString(),
+          created_at: new Date().toISOString(),
         },
       ],
     },
@@ -62,13 +65,13 @@ export const SAMPLE_ANNOTATIONS = {
           id: "response_2_1",
           title: "Location Overview",
           text: "The property is situated in the prestigious North Shore district, known for its excellent schools and safe, family-friendly environment. Within walking distance, residents can find high-end boutiques, Michelin-starred restaurants, and artisanal cafes. The area is served by top-rated schools, including the renowned Lincoln Elementary (rated 9/10) and Washington High School (rated 10/10), making it ideal for families with school-age children.",
-          timestamp: new Date().toISOString(),
+          created_at: new Date().toISOString(),
         },
         {
           id: "response_2_2",
           title: "Transportation and Accessibility",
           text: "Transportation options are abundant, with the express train station just a 5-minute walk away, offering a 20-minute commute to downtown. The international airport is accessible within 30 minutes by car or express shuttle. The neighborhood features extensive bike lanes and walking paths, connecting to major parks and recreational areas. Additionally, the area is served by multiple bus lines and ride-sharing services are readily available.",
-          timestamp: new Date().toISOString(),
+          created_at: new Date().toISOString(),
         },
       ],
     },
@@ -89,7 +92,7 @@ export const SAMPLE_NEW_ANNOTATIONS = {
         id: "response_1",
         title: "AIR",
         text: "This luxury property features a state-of-the-art smart home system and panoramic ocean views. The property includes a private infinity pool and direct beach access.",
-        timestamp: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       },
     },
     {
@@ -102,7 +105,7 @@ export const SAMPLE_NEW_ANNOTATIONS = {
         id: "response_1",
         title: "AIR",
         text: "The answer",
-        timestamp: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       },
     },
   ],

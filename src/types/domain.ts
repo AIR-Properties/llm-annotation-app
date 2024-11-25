@@ -11,6 +11,7 @@ export interface Response {
   text: string;
   prompt_id: string;
   answer_id: string;
+  created_at?: string;
 }
 
 export interface UIResponse extends Response {

@@ -149,6 +149,7 @@ const Arena: React.FC = () => {
                   text: response.text,
                   prompt_id: currentPrompt.id,
                   answer_id: response.id,
+                  created_at: response.created_at,
                 }))}
                 onFeedbackChange={handleFeedbackChange}
                 onError={handleError}

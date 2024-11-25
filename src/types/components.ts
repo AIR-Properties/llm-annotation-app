@@ -29,6 +29,7 @@ export interface ResponseBoxProps extends WithClassName {
   feedback?: FeedbackType;
   prompt_id: string;
   answer_id: string;
+  created_at?: string;
   onFeedbackChange?: (feedback: FeedbackType | undefined) => void;
   onError?: ErrorHandler;
 }

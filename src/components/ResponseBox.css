@@ -20,14 +20,24 @@
 .response-box-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 10px;
+}
+
+.title-timestamp {
+  flex: 1;
 }
 
 .response-box-title {
   font-weight: bold;
   color: #065f46;
-  flex: 1;
+  margin-bottom: 4px;
+}
+
+.response-timestamp {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 2px;
 }
 
 .copy-wrapper {

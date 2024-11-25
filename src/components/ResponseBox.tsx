@@ -10,6 +10,7 @@ interface ResponseBoxProps {
   feedback?: "helpful" | "not_helpful" | "neutral";
   prompt_id: string;
   answer_id: string;
+  created_at?: string;
   onFeedbackChange?: (
     feedback: "helpful" | "not_helpful" | "neutral" | undefined
   ) => void;
@@ -22,6 +23,7 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
   feedback,
   prompt_id,
   answer_id,
+  created_at,
   onFeedbackChange,
   onError,
 }) => {
@@ -64,10 +66,21 @@ const ResponseBox: React.FC<ResponseBoxProps> = ({
     }
   }, [text, onError]);
 
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleString();
+  };
+
   return (
     <div className="response-box">
       <div className="response-box-header">
-        <div className="response-box-title">{title}</div>
+        <div className="title-timestamp">
+          <div className="response-box-title">{title}</div>
+          {created_at && (
+            <div className="response-timestamp">{formatDate(created_at)}</div>
+          )}
+        </div>
         <div className="copy-wrapper">
           <button
             className="copy-button"

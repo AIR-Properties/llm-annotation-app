@@ -27,6 +27,7 @@ const ResponseList: React.FC<ResponseListProps> = ({
           feedback={result.feedback}
           prompt_id={result.prompt_id}
           answer_id={result.id}
+          created_at={result.created_at}
           onFeedbackChange={
             onFeedbackChange
               ? (feedback) => handleFeedback(result.id, feedback)
