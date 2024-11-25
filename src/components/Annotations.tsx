@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import BackButton from "./BackButton";
 import { annotationService } from "../services/api";
-import { NewAnnotationResponse } from "../types/api";
-import { SAMPLE_NEW_ANNOTATIONS } from "../data/sampleData";
+import { AnnotationPrompt } from "../types/api";
+import { SAMPLE_ANNOTATIONS } from "../data/sampleData";
 import { getUserName } from "../utils/auth";
 import "./Annotations.css";
 
@@ -15,7 +15,7 @@ interface ChatMessage {
 }
 
 const Annotations: React.FC = () => {
-  const [prompts, setPrompts] = useState<NewAnnotationResponse[]>([]);
+  const [prompts, setPrompts] = useState<AnnotationPrompt[]>([]);
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [feedbackText, setFeedbackText] = useState("");
@@ -50,14 +50,20 @@ const Annotations: React.FC = () => {
     if (currentPromptIndex < prompts.length - 1) {
       setCurrentPromptIndex((prev) => prev + 1);
       const nextPrompt = prompts[currentPromptIndex + 1];
-      setChatMessages([
-        {
-          id: nextPrompt.response.id,
-          type: "response",
-          content: nextPrompt.response.text,
-          timestamp: nextPrompt.response.timestamp,
-        },
-      ]);
+      // Get the latest AIR response
+      const latestAirResponse = nextPrompt?.responses
+        ?.filter((response) => response.title === "AIR")
+        ?.slice(-1)[0];
+      if (latestAirResponse) {
+        setChatMessages([
+          {
+            id: latestAirResponse.id,
+            type: "response",
+            content: latestAirResponse.text,
+            timestamp: latestAirResponse.timestamp,
+          },
+        ]);
+      }
     } else {
       setChatMessages([
         {
@@ -79,36 +85,46 @@ const Annotations: React.FC = () => {
           return;
         }
 
-        const response = await annotationService.getNewAnnotations({
+        const response = await annotationService.getAnnotations({
           username,
         });
 
-        if (response.data.length > 0) {
+        if (response?.data?.length > 0) {
           setPrompts(response.data);
-          setChatMessages([
-            {
-              id: response.data[0].response.id,
-              type: "response",
-              content: response.data[0].response.text,
-              timestamp: response.data[0].response.timestamp,
-            },
-          ]);
+          // Get the latest AIR response from the first prompt
+          const latestAirResponse = response.data[0].responses
+            ?.filter((response) => response.title === "AIR")
+            ?.slice(-1)[0];
+          if (latestAirResponse) {
+            setChatMessages([
+              {
+                id: latestAirResponse.id,
+                type: "response",
+                content: latestAirResponse.text,
+                timestamp: latestAirResponse.timestamp,
+              },
+            ]);
+          }
         }
       } catch (err) {
         console.error("Error fetching annotations:", err);
         addErrorMessage();
         // Keep showing sample data on error
-        const sampleData = SAMPLE_NEW_ANNOTATIONS.data;
-        setPrompts(sampleData);
-        if (sampleData.length > 0) {
-          setChatMessages([
-            {
-              id: sampleData[0].response.id,
-              type: "response",
-              content: sampleData[0].response.text,
-              timestamp: sampleData[0].response.timestamp,
-            },
-          ]);
+        if (SAMPLE_ANNOTATIONS?.data?.length > 0) {
+          setPrompts(SAMPLE_ANNOTATIONS.data);
+          const latestAirResponse = SAMPLE_ANNOTATIONS.data[0].responses
+            ?.filter((response) => response.title === "AIR")
+            ?.slice(-1)[0];
+          if (latestAirResponse) {
+            setChatMessages([
+              {
+                id: latestAirResponse.id,
+                type: "response",
+                content: latestAirResponse.text,
+                timestamp: latestAirResponse.timestamp,
+              },
+            ]);
+          }
         }
       } finally {
         setIsLoading(false);
@@ -133,12 +149,19 @@ const Annotations: React.FC = () => {
             timestamp: new Date().toISOString(),
           },
         ]);
-        await annotationService.submitAnnotationFeedback({
-          prompt_id: currentPrompt.prompt_id,
-          answer_id: currentPrompt.response.id,
-          feedback,
-          username: getUserName() || "",
-        });
+
+        const latestAirResponse = currentPrompt.responses
+          ?.filter((response) => response.title === "AIR")
+          ?.slice(-1)[0];
+
+        if (latestAirResponse) {
+          await annotationService.submitAnnotationFeedback({
+            prompt_id: currentPrompt.id,
+            answer_id: latestAirResponse.id,
+            feedback,
+            username: getUserName() || "",
+          });
+        }
 
         setChatMessages((prev) => [
           ...prev.filter((msg) => msg.type !== "typing"),
@@ -195,24 +218,30 @@ const Annotations: React.FC = () => {
 
         await new Promise((resolve) => setTimeout(resolve, 100)); // Add delay
 
-        const response = await annotationService.submitAnnotationFeedback({
-          prompt_id: currentPrompt.prompt_id,
-          answer_id: currentPrompt.response.id,
-          message: text,
-          username: getUserName() || "",
-        });
+        const latestAirResponse = currentPrompt.responses
+          ?.filter((response) => response.title === "AIR")
+          ?.slice(-1)[0];
 
-        if (response.new_response) {
-          const newResponse = response.new_response;
-          setChatMessages((prev) => [
-            ...prev.filter((msg) => msg.type !== "typing"),
-            {
-              id: newResponse.id,
-              type: "response",
-              content: newResponse.text,
-              timestamp: newResponse.timestamp,
-            },
-          ]);
+        if (latestAirResponse) {
+          const response = await annotationService.submitAnnotationFeedback({
+            prompt_id: currentPrompt.id,
+            answer_id: latestAirResponse.id,
+            message: text,
+            username: getUserName() || "",
+          });
+
+          // Only add response message if it exists
+          if (response.message) {
+            setChatMessages((prev) => [
+              ...prev.filter((msg) => msg.type !== "typing"),
+              {
+                id: `response-${Date.now()}`,
+                type: "response",
+                content: response.message,
+                timestamp: new Date().toISOString(),
+              } as ChatMessage,
+            ]);
+          }
         }
       } catch (err) {
         addErrorMessage(text);

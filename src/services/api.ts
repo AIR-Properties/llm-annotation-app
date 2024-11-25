@@ -77,8 +77,8 @@ export const annotationService = {
 
   getNewAnnotations: async (
     request: GetAnnotationsRequest
-  ): Promise<NewAnnotationsResponse> => {
-    return makeRequest<NewAnnotationsResponse>(
+  ): Promise<AnnotationsResponse> => {
+    return makeRequest<AnnotationsResponse>(
       API_CONFIG.ENDPOINTS.ANNOTATION,
       "POST",
       request

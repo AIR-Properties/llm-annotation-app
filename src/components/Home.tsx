@@ -71,15 +71,15 @@ const Home: React.FC = () => {
           </button>
           <button
             className="nav-button"
-            onClick={() => handleNavigate("/annotations")}
+            onClick={() => handleNavigate("/arena")}
           >
-            Review and Annotate
+            Review and Feedback (Arena)
           </button>
           <button
             className="nav-button"
-            onClick={() => handleNavigate("/arena")}
+            onClick={() => handleNavigate("/annotations")}
           >
-            Arena
+            Annotations (Beta)
           </button>
         </div>
       </div>

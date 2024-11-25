@@ -4,34 +4,16 @@ import Toast from "./Toast";
 import Footer from "./Footer";
 import BackButton from "./BackButton";
 import { annotationService, APIError } from "../services/api";
-import { mapAnnotationsToDomain } from "../utils/mappers";
 import { ERROR_MESSAGES } from "../constants/messages";
-import {
-  Response as DomainResponse,
-  FeedbackType,
-  Metadata,
-} from "../types/domain";
+import { FeedbackType } from "../types/domain";
+import { AnnotationPrompt, AnnotationResponse } from "../types/api";
 import { SAMPLE_ANNOTATIONS } from "../data/sampleData";
 import { getUserName } from "../utils/auth";
 import "./Arena.css";
 
-interface ArenaResponse extends DomainResponse {
-  feedback?: FeedbackType;
-}
-
-interface ArenaBox {
-  id: string;
-  title: string;
-  prompt: string;
-  metadata?: Metadata;
-  responses: ArenaResponse[];
-  isExpanded: boolean;
-  isClosing?: boolean;
-}
-
 const Arena: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
-  const [arenaItems, setArenaItems] = useState<ArenaBox[]>([]);
+  const [prompts, setPrompts] = useState<AnnotationPrompt[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,14 +29,9 @@ const Arena: React.FC = () => {
         }
 
         const response = await annotationService.getAnnotations({ username });
-        const mappedData = mapAnnotationsToDomain(response);
-        setArenaItems(
-          mappedData.map((item) => ({
-            ...item,
-            isExpanded: true,
-            responses: item.responses,
-          }))
-        );
+        if (response?.data) {
+          setPrompts(response.data);
+        }
       } catch (err) {
         console.error("Error fetching arena items:", err);
         if (err instanceof APIError) {
@@ -65,13 +42,9 @@ const Arena: React.FC = () => {
           setError(ERROR_MESSAGES.UNEXPECTED_ERROR);
         }
         // Keep showing sample data on error
-        setArenaItems(
-          mapAnnotationsToDomain(SAMPLE_ANNOTATIONS).map((item) => ({
-            ...item,
-            isExpanded: true,
-            responses: item.responses,
-          }))
-        );
+        if (SAMPLE_ANNOTATIONS?.data) {
+          setPrompts(SAMPLE_ANNOTATIONS.data);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -81,10 +54,10 @@ const Arena: React.FC = () => {
   }, []);
 
   const handleNext = useCallback(() => {
-    if (currentIndex < arenaItems.length - 1) {
+    if (currentIndex < prompts.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
-  }, [currentIndex, arenaItems.length]);
+  }, [currentIndex, prompts.length]);
 
   const handlePrevious = useCallback(() => {
     if (currentIndex > 0) {
@@ -125,20 +98,9 @@ const Arena: React.FC = () => {
 
   const handleFeedbackChange = useCallback(
     (resultId: string, newFeedback: FeedbackType | undefined) => {
-      setArenaItems((prevItems) => {
-        const newItems = [...prevItems];
-        const item = newItems[currentIndex];
-        if (item) {
-          item.responses = item.responses.map((response) =>
-            response.id === resultId
-              ? { ...response, feedback: newFeedback }
-              : response
-          );
-        }
-        return newItems;
-      });
+      // Feedback handling can be implemented if needed
     },
-    [currentIndex]
+    []
   );
 
   const handleError = useCallback((errorMessage: string) => {
@@ -149,7 +111,7 @@ const Arena: React.FC = () => {
     return <div className="arena-container loading">Loading...</div>;
   }
 
-  const currentItem = arenaItems[currentIndex];
+  const currentPrompt = prompts[currentIndex];
 
   return (
     <div
@@ -164,13 +126,13 @@ const Arena: React.FC = () => {
       <BackButton to="/" />
 
       <div className="content-wrapper">
-        {currentItem && (
+        {currentPrompt && (
           <div className="arena-box">
             <div className="prompt-section">
-              <div className="prompt-title">{currentItem.prompt}</div>
-              {currentItem.metadata?.link && (
+              <div className="prompt-title">{currentPrompt.prompt}</div>
+              {currentPrompt.metadata?.link && (
                 <a
-                  href={currentItem.metadata.link}
+                  href={currentPrompt.metadata.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="metadata-link"
@@ -179,11 +141,19 @@ const Arena: React.FC = () => {
                 </a>
               )}
             </div>
-            <ResponseList
-              results={currentItem.responses}
-              onFeedbackChange={handleFeedbackChange}
-              onError={handleError}
-            />
+            {currentPrompt.responses && (
+              <ResponseList
+                results={currentPrompt.responses.map((response) => ({
+                  id: response.id,
+                  title: response.title,
+                  text: response.text,
+                  prompt_id: currentPrompt.id,
+                  answer_id: response.id,
+                }))}
+                onFeedbackChange={handleFeedbackChange}
+                onError={handleError}
+              />
+            )}
           </div>
         )}
       </div>
@@ -200,13 +170,13 @@ const Arena: React.FC = () => {
           <button
             className="nav-button"
             onClick={handleNext}
-            disabled={currentIndex === arenaItems.length - 1}
+            disabled={currentIndex === prompts.length - 1}
           >
             Next
           </button>
         </div>
         <div className="prompt-counter">
-          {currentIndex + 1} / {arenaItems.length}
+          {currentIndex + 1} / {prompts.length}
         </div>
       </div>
 
