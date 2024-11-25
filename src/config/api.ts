@@ -2,11 +2,11 @@ console.log("ENV::::", process.env.REACT_APP_API_URL);
 const API_CONFIG = {
   BASE_URL: process.env.REACT_APP_API_URL,
   ENDPOINTS: {
-    ASK: "/annotation/ask",
-    FEEDBACK: "/annotation/feedback",
+    ASK: "/airena/annotation/ask",
+    FEEDBACK: "/airena/annotation/feedback",
     ARENA_DATA: "/airena/data",
-    ANNOTATION: "/annotation/data",
-    ANNOTATION_SUBMIT: "/annotation/feedback",
+    ANNOTATION: "/airena/annotation/data",
+    ANNOTATION_SUBMIT: "/airena/annotation/feedback",
   },
   DEFAULT_HEADERS: {
     "Content-Type": "application/json",
