@@ -1,77 +1,131 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import ResponseList from "./ResponseList";
-import Toast from "./Toast";
-import Footer from "./Footer";
 import BackButton from "./BackButton";
-import { annotationService, APIError } from "../services/api";
-import { mapAnnotationsToDomain } from "../utils/mappers";
-import { ERROR_MESSAGES } from "../constants/messages";
-import {
-  Response as DomainResponse,
-  FeedbackType,
-  Metadata,
-} from "../types/domain";
+import { annotationService } from "../services/api";
+import { AnnotationPrompt } from "../types/api";
 import { SAMPLE_ANNOTATIONS } from "../data/sampleData";
 import { getUserName } from "../utils/auth";
 import "./Annotations.css";
 
-interface AnnotationResponse extends DomainResponse {
-  feedback?: FeedbackType;
-}
-
-interface AnnotationBox {
+interface ChatMessage {
   id: string;
-  title: string;
-  prompt: string;
-  metadata?: Metadata;
-  responses: AnnotationResponse[];
-  isExpanded: boolean;
-  isClosing?: boolean;
+  type: "response" | "feedback" | "error" | "typing";
+  content: string;
+  created_at: string;
+  feedbackText?: string;
 }
 
 const Annotations: React.FC = () => {
-  const [error, setError] = useState<string | null>(null);
-  const [annotations, setAnnotations] = useState<AnnotationBox[]>([]);
+  const [prompts, setPrompts] = useState<AnnotationPrompt[]>([]);
+  const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [feedbackText, setFeedbackText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const touchStartX = useRef<number>(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const currentPrompt = prompts[currentPromptIndex];
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatMessages]);
+
+  const addErrorMessage = (feedbackText?: string) => {
+    setChatMessages((prev) => [
+      ...prev.filter((msg) => msg.type !== "typing"),
+      {
+        id: `error-${Date.now()}`,
+        type: "error",
+        content: "Sorry, there was an issue. Try again.",
+        created_at: new Date().toISOString(),
+        feedbackText,
+      },
+    ]);
+  };
+
+  const moveToNextPrompt = useCallback(() => {
+    if (currentPromptIndex < prompts.length - 1) {
+      setCurrentPromptIndex((prev) => prev + 1);
+      const nextPrompt = prompts[currentPromptIndex + 1];
+      // Get the latest AIR response
+      const latestAirResponse = nextPrompt?.responses
+        ?.filter((response) => response.title === "AIR")
+        ?.slice(-1)[0];
+      if (latestAirResponse) {
+        setChatMessages([
+          {
+            id: latestAirResponse.id,
+            type: "response",
+            content: latestAirResponse.text,
+            created_at: latestAirResponse.created_at,
+          },
+        ]);
+      }
+    } else {
+      setChatMessages([
+        {
+          id: "end",
+          type: "response",
+          content: "No more prompts available.",
+          created_at: new Date().toISOString(),
+        },
+      ]);
+    }
+  }, [currentPromptIndex, prompts]);
 
   useEffect(() => {
     const fetchAnnotations = async () => {
       try {
         const username = getUserName();
         if (!username) {
-          setError("User not authenticated");
+          addErrorMessage();
           return;
         }
 
-        const response = await annotationService.getAnnotations({ username });
-        const mappedData = mapAnnotationsToDomain(response);
-        setAnnotations(
-          mappedData.map((item) => ({
-            ...item,
-            isExpanded: true,
-            responses: item.responses,
-          }))
-        );
+        const response = await annotationService.getAnnotations({
+          username,
+        });
+
+        if (response?.data?.length > 0) {
+          setPrompts(response.data);
+          // Get the latest AIR response from the first prompt
+          const latestAirResponse = response.data[0].responses
+            ?.filter((response) => response.title === "AIR")
+            ?.slice(-1)[0];
+          if (latestAirResponse) {
+            setChatMessages([
+              {
+                id: latestAirResponse.id,
+                type: "response",
+                content: latestAirResponse.text,
+                created_at: latestAirResponse.created_at,
+              },
+            ]);
+          }
+        }
       } catch (err) {
         console.error("Error fetching annotations:", err);
-        if (err instanceof APIError) {
-          setError(ERROR_MESSAGES.REQUEST_FAILED(err.message));
-        } else if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(ERROR_MESSAGES.UNEXPECTED_ERROR);
-        }
+        addErrorMessage();
         // Keep showing sample data on error
-        setAnnotations(
-          mapAnnotationsToDomain(SAMPLE_ANNOTATIONS).map((item) => ({
-            ...item,
-            isExpanded: true,
-            responses: item.responses,
-          }))
-        );
+        if (SAMPLE_ANNOTATIONS?.data?.length > 0) {
+          setPrompts(SAMPLE_ANNOTATIONS.data);
+          const latestAirResponse = SAMPLE_ANNOTATIONS.data[0].responses
+            ?.filter((response) => response.title === "AIR")
+            ?.slice(-1)[0];
+          if (latestAirResponse) {
+            setChatMessages([
+              {
+                id: latestAirResponse.id,
+                type: "response",
+                content: latestAirResponse.text,
+                created_at: latestAirResponse.created_at,
+              },
+            ]);
+          }
+        }
       } finally {
         setIsLoading(false);
       }
@@ -80,138 +134,255 @@ const Annotations: React.FC = () => {
     fetchAnnotations();
   }, []);
 
-  const handleNext = useCallback(() => {
-    if (currentIndex < annotations.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    }
-  }, [currentIndex, annotations.length]);
+  const handleFeedbackAction = useCallback(
+    async (feedback: "perfect" | "like") => {
+      if (!currentPrompt) return;
 
-  const handlePrevious = useCallback(() => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
-  }, [currentIndex]);
+      try {
+        setIsSubmitting(true);
+        setChatMessages((prev) => [
+          ...prev,
+          {
+            id: `typing-${Date.now()}`,
+            type: "typing",
+            content: "",
+            created_at: new Date().toISOString(),
+          },
+        ]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") {
-        handlePrevious();
-      } else if (event.key === "ArrowRight") {
-        handleNext();
-      }
-    };
+        const latestAirResponse = currentPrompt.responses
+          ?.filter((response) => response.title === "AIR")
+          ?.slice(-1)[0];
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleNext, handlePrevious]);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
-
-    if (Math.abs(diff) > 50) {
-      // minimum swipe distance
-      if (diff > 0) {
-        handleNext();
-      } else {
-        handlePrevious();
-      }
-    }
-  };
-
-  const handleFeedbackChange = useCallback(
-    (resultId: string, newFeedback: FeedbackType | undefined) => {
-      const currentAnnotation = annotations[currentIndex];
-      setAnnotations((prevAnnotations) => {
-        const newAnnotations = [...prevAnnotations];
-        const annotation = newAnnotations[currentIndex];
-        if (annotation) {
-          annotation.responses = annotation.responses.map((response) =>
-            response.id === resultId
-              ? { ...response, feedback: newFeedback }
-              : response
-          );
+        if (latestAirResponse) {
+          await annotationService.submitAnnotationFeedback({
+            prompt_id: currentPrompt.id,
+            answer_id: latestAirResponse.id,
+            feedback,
+            username: getUserName() || "",
+          });
         }
-        return newAnnotations;
-      });
+
+        setChatMessages((prev) => [
+          ...prev.filter((msg) => msg.type !== "typing"),
+          {
+            id: `feedback-${Date.now()}`,
+            type: "feedback",
+            content:
+              feedback === "perfect"
+                ? "Perfect ✨"
+                : feedback === "like"
+                ? "Liked 👍"
+                : "",
+            created_at: new Date().toISOString(),
+          },
+        ]);
+
+        moveToNextPrompt();
+      } catch (err) {
+        addErrorMessage();
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [annotations, currentIndex]
+    [currentPrompt, moveToNextPrompt]
   );
 
-  const handleError = useCallback((errorMessage: string) => {
-    setError(errorMessage);
-  }, []);
+  const submitFeedback = useCallback(
+    async (text: string) => {
+      if (!currentPrompt) return;
+
+      const messageId = `feedback-${Date.now()}`;
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          id: messageId,
+          type: "feedback",
+          content: text,
+          created_at: new Date().toISOString(),
+          feedbackText: text,
+        },
+      ]);
+
+      try {
+        setIsSubmitting(true);
+        setChatMessages((prev) => [
+          ...prev,
+          {
+            id: `typing-${Date.now()}`,
+            type: "typing",
+            content: "",
+            created_at: new Date().toISOString(),
+          },
+        ]);
+
+        await new Promise((resolve) => setTimeout(resolve, 100)); // Add delay
+
+        const latestAirResponse = currentPrompt.responses
+          ?.filter((response) => response.title === "AIR")
+          ?.slice(-1)[0];
+
+        if (latestAirResponse) {
+          const response = await annotationService.submitAnnotationFeedback({
+            prompt_id: currentPrompt.id,
+            answer_id: latestAirResponse.id,
+            message: text,
+            username: getUserName() || "",
+          });
+
+          // Only add response message if it exists
+          if (response.message) {
+            setChatMessages((prev) => [
+              ...prev.filter((msg) => msg.type !== "typing"),
+              {
+                id: `response-${Date.now()}`,
+                type: "response",
+                content: response.message,
+                created_at: new Date().toISOString(),
+              } as ChatMessage,
+            ]);
+          }
+        }
+      } catch (err) {
+        addErrorMessage(text);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [currentPrompt]
+  );
+
+  const handleFeedbackSubmit = useCallback(async () => {
+    if (!currentPrompt || !feedbackText.trim()) return;
+    await submitFeedback(feedbackText);
+    setFeedbackText("");
+  }, [currentPrompt, feedbackText, submitFeedback]);
+
+  const handleRetry = useCallback(
+    async (errorMessage: ChatMessage) => {
+      if (!errorMessage.feedbackText) return;
+      await submitFeedback(errorMessage.feedbackText);
+    },
+    [submitFeedback]
+  );
+
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter" && feedbackText.trim()) {
+        handleFeedbackSubmit();
+      }
+    },
+    [feedbackText, handleFeedbackSubmit]
+  );
 
   if (isLoading) {
     return <div className="annotations-container loading">Loading...</div>;
   }
 
-  const currentAnnotation = annotations[currentIndex];
-
   return (
-    <div
-      className="annotations-container"
-      ref={containerRef}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      {error && (
-        <Toast message={error} type="error" onClose={() => setError(null)} />
-      )}
+    <div className="annotations-container">
       <BackButton to="/" />
 
-      <div className="content-wrapper">
-        {currentAnnotation && (
-          <div className="annotation-box">
-            <div className="prompt-section">
-              <div className="prompt-title">{currentAnnotation.prompt}</div>
-              {currentAnnotation.metadata?.link && (
-                <a
-                  href={currentAnnotation.metadata.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="metadata-link"
-                >
-                  View Property Details →
-                </a>
-              )}
-            </div>
-            <ResponseList
-              results={currentAnnotation.responses}
-              onFeedbackChange={handleFeedbackChange}
-              onError={handleError}
-            />
+      {currentPrompt && (
+        <>
+          <div className="prompt-section">
+            <div className="prompt-title">{currentPrompt.prompt}</div>
+            {currentPrompt.metadata?.link && (
+              <a
+                href={currentPrompt.metadata.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="metadata-link"
+              >
+                View Property Details →
+              </a>
+            )}
           </div>
-        )}
-      </div>
 
-      <div className="navigation-wrapper">
-        <div className="navigation-controls">
-          <button
-            className="nav-button"
-            onClick={handlePrevious}
-            disabled={currentIndex === 0}
-          >
-            Previous
-          </button>
-          <button
-            className="nav-button"
-            onClick={handleNext}
-            disabled={currentIndex === annotations.length - 1}
-          >
-            Next
-          </button>
-        </div>
-        <div className="prompt-counter">
-          {currentIndex + 1} / {annotations.length}
-        </div>
-      </div>
+          <div className="chat-section">
+            {chatMessages.map((message) => (
+              <div
+                key={message.id}
+                className={`chat-message ${
+                  message.type === "feedback"
+                    ? "user-message"
+                    : message.type === "typing"
+                    ? "typing-message"
+                    : "ai-message"
+                }`}
+              >
+                <div className="message-content">
+                  {message.type === "typing" ? (
+                    <div className="typing-dots">
+                      <span>.</span>
+                      <span>.</span>
+                      <span>.</span>
+                    </div>
+                  ) : (
+                    message.content
+                  )}
+                </div>
+                <div className="message-timestamp">
+                  {new Date(message.created_at).toLocaleTimeString()}
+                </div>
+                {message.type === "error" && message.feedbackText && (
+                  <button
+                    className="retry-button"
+                    onClick={() => handleRetry(message)}
+                  >
+                    Try Again
+                  </button>
+                )}
+              </div>
+            ))}
+            <div ref={chatEndRef} />
+          </div>
 
-      <Footer />
+          <div className="feedback-section">
+            <div className="feedback-buttons">
+              <button
+                className="perfect-button"
+                onClick={() => handleFeedbackAction("perfect")}
+                disabled={isSubmitting}
+              >
+                Perfect ✨
+              </button>
+              <button
+                className="like-button"
+                onClick={() => handleFeedbackAction("like")}
+                disabled={isSubmitting}
+              >
+                Like 👍
+              </button>
+              <button
+                className="skip-button"
+                onClick={moveToNextPrompt}
+                disabled={isSubmitting}
+              >
+                Skip ⏭️
+              </button>
+            </div>
+            <div className="feedback-input-container">
+              <input
+                type="text"
+                value={feedbackText}
+                onChange={(e) => setFeedbackText(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Or provide feedback here..."
+                className="feedback-input"
+                disabled={isSubmitting}
+              />
+              <button
+                className="submit-button"
+                onClick={handleFeedbackSubmit}
+                disabled={!feedbackText.trim() || isSubmitting}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

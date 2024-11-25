@@ -16,7 +16,7 @@ export function mapResponseToDomain(
     title: response.title,
     text: response.text,
     prompt_id: promptId,
-    response_id: response.id,
+    answer_id: response.id,
   };
 }
 
@@ -51,7 +51,7 @@ export function mapAnnotationsToDomain(
         title: response.title,
         text: response.text,
         prompt_id: prompt.id,
-        response_id: response.id,
+        answer_id: response.id,
       })),
     })
   );

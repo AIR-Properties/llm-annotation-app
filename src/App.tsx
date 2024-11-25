@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import LLMResponses from "./components/LLMResponses";
 import Annotations from "./components/Annotations";
+import Arena from "./components/Arena";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 
@@ -25,6 +26,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <Annotations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/arena"
+            element={
+              <ProtectedRoute>
+                <Arena />
               </ProtectedRoute>
             }
           />

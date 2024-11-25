@@ -67,13 +67,19 @@ const Home: React.FC = () => {
             className="nav-button"
             onClick={() => handleNavigate("/llm-responses")}
           >
-            Ask Questions 
+            Ask Questions
+          </button>
+          <button
+            className="nav-button"
+            onClick={() => handleNavigate("/arena")}
+          >
+            Review and Feedback (Arena)
           </button>
           <button
             className="nav-button"
             onClick={() => handleNavigate("/annotations")}
           >
-            Review and Annotate
+            Annotations (Beta)
           </button>
         </div>
       </div>

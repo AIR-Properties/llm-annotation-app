@@ -4,7 +4,9 @@ const API_CONFIG = {
   ENDPOINTS: {
     ASK: "/annotation/ask",
     FEEDBACK: "/annotation/feedback",
-    DATA: "/annotation/data",
+    ARENA_DATA: "/airena/data",
+    ANNOTATION: "/annotation/data",
+    ANNOTATION_SUBMIT: "/annotation/feedback",
   },
   DEFAULT_HEADERS: {
     "Content-Type": "application/json",
