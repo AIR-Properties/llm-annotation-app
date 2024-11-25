@@ -24,14 +24,18 @@ jobs:
         script: |
           cd ${{ secrets.APP_PATH }}
           git checkout old-stable
-          git pull old-stable
+          git pull origin old-stable
           echo "Building with REACT_APP_API_URL=${{secrets.REACT_APP_API_URL}}"
+          # Clean up any existing images and containers
+          docker stop annotation-app || true
+          docker rm annotation-app || true
+          docker rmi annotation-app:latest || true
+          # Build with no cache to ensure fresh build
           docker build \
+            --no-cache \
             --build-arg REACT_APP_API_URL="${{secrets.REACT_APP_API_URL}}" \
             -f Dockerfile \
             -t annotation-app:latest .
-          docker stop annotation-app || true
-          docker rm annotation-app || true
           docker run -d \
             --name annotation-app \
             -p 9898:80 \

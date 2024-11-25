@@ -32,7 +32,7 @@ ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 # Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy source code
 COPY . .
@@ -40,8 +40,8 @@ COPY . .
 # Debug: Print environment variable during build
 RUN echo "Building with REACT_APP_API_URL=$REACT_APP_API_URL"
 
-# Build the application
-RUN REACT_APP_API_URL=$REACT_APP_API_URL npm run build
+# Build the application with cache busting
+RUN REACT_APP_API_URL=$REACT_APP_API_URL BUILD_TIME=$(date +%s) npm run build
 
 # Production stage - serve static files
 FROM node:18-alpine AS production
