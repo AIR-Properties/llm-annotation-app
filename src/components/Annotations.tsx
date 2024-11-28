@@ -237,7 +237,7 @@ const Annotations: React.FC = () => {
               {
                 id: `response-${Date.now()}`,
                 type: "response",
-                content: response.message,
+                content: response.new_response,
                 created_at: new Date().toISOString(),
               } as ChatMessage,
             ]);

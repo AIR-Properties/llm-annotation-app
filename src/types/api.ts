@@ -45,7 +45,7 @@ export interface AskResponse {
 export interface FeedbackResponse {
   success: boolean;
   message?: string;
-  new_response?: AnnotationResponse;
+  new_response?: string;
 }
 
 export interface AnnotationResponse {
