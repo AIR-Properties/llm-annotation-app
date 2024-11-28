@@ -1,5 +1,6 @@
 import React, { useState, useCallback, KeyboardEvent } from "react";
 import { ERROR_MESSAGES } from "../constants/messages";
+import "./PromptInput.css";
 
 interface PromptInputProps {
   onSubmit: (prompt: string, propertyLink: string) => Promise<void>;
@@ -10,8 +11,25 @@ interface PromptInputProps {
 type PromptState = string;
 type PropertyLinkState = string;
 
-const DEFAULT_PROPERTY_LINK =
-  "https://www.propertyfinder.ae/en/plp/buy/apartment-for-sale-dubai-downtown-dubai-29-burj-boulevard-29-burj-boulevard-podium-12692673.html";
+interface PropertyOption {
+  title: string;
+  url: string;
+}
+
+const DEFAULT_PROPERTY_OPTIONS: PropertyOption[] = [
+  {
+    title: "AIR-29 Boulvard",
+    url: "https://www.propertyfinder.ae/en/plp/buy/apartment-for-sale-dubai-downtown-dubai-29-burj-boulevard-29-burj-boulevard-podium-12692673.html",
+  },
+  {
+    title: "AIR-Burj Vista",
+    url: "https://www.propertyfinder.ae/en/plp/buy/apartment-for-sale-dubai-downtown-dubai-burj-vista-burj-vista-1-12930246.html",
+  },
+  {
+    title: "Others-Marina Gate 1",
+    url: "https://www.propertyfinder.ae/en/plp/buy/apartment-for-sale-dubai-dubai-marina-marina-gate-marina-gate-1-12764778.html",
+  },
+];
 
 const PromptInput: React.FC<PromptInputProps> = ({
   onSubmit,
@@ -20,13 +38,15 @@ const PromptInput: React.FC<PromptInputProps> = ({
 }) => {
   const [prompt, setPrompt] = useState<PromptState>("");
   const [propertyLink, setPropertyLink] = useState<PropertyLinkState>(
-    DEFAULT_PROPERTY_LINK
+    DEFAULT_PROPERTY_OPTIONS[0].url
   );
+  const [isCustomLink, setIsCustomLink] = useState(false);
 
   const handlePaste = useCallback(async (): Promise<void> => {
     try {
       const text = await navigator.clipboard.readText();
       setPropertyLink(text);
+      setIsCustomLink(true);
     } catch (err) {
       console.error("Failed to read clipboard contents:", err);
       onError(ERROR_MESSAGES.CLIPBOARD_ERROR);
@@ -66,15 +86,29 @@ const PromptInput: React.FC<PromptInputProps> = ({
   );
 
   const handlePropertyLinkChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>): void => {
-      setPropertyLink(e.target.value);
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+      const value = e.target.value;
+      if (e.target.tagName.toLowerCase() === "select") {
+        if (value === "custom") {
+          setIsCustomLink(true);
+          setPropertyLink("");
+        } else {
+          setIsCustomLink(false);
+          setPropertyLink(value);
+        }
+      } else {
+        setPropertyLink(value);
+      }
     },
     []
   );
 
-  const handleClearPropertyLink = useCallback((): void => {
-    setPropertyLink("");
-  }, []);
+  const getCurrentPropertyOption = () => {
+    if (isCustomLink) return null;
+    return DEFAULT_PROPERTY_OPTIONS.find(
+      (option) => option.url === propertyLink
+    );
+  };
 
   return (
     <div className="input-section">
@@ -103,19 +137,43 @@ const PromptInput: React.FC<PromptInputProps> = ({
         <label className="input-label" htmlFor="property-link">
           Property Link
         </label>
-        <div className="input-row">
-          <input
-            type="text"
-            id="property-link"
-            value={propertyLink}
+        <div className="input-row property-input-row">
+          <select
+            value={isCustomLink ? "custom" : propertyLink}
             onChange={handlePropertyLinkChange}
-          />
-          <button className="remove-button" onClick={handleClearPropertyLink}>
-            Remove
-          </button>
-          <button className="paste-button" onClick={handlePaste}>
-            Paste
-          </button>
+            className="property-select"
+          >
+            {DEFAULT_PROPERTY_OPTIONS.map((option) => (
+              <option key={option.url} value={option.url}>
+                {option.title}
+              </option>
+            ))}
+            <option value="custom">Custom Link</option>
+          </select>
+          {!isCustomLink && propertyLink && (
+            <a
+              href={propertyLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="property-link"
+            >
+              {propertyLink}
+            </a>
+          )}
+          {isCustomLink && (
+            <div className="custom-link-input">
+              <input
+                type="text"
+                id="property-link"
+                value={propertyLink}
+                onChange={handlePropertyLinkChange}
+                placeholder="Enter property URL..."
+              />
+              <button className="paste-button" onClick={handlePaste}>
+                Paste
+              </button>
+            </div>
+          )}
         </div>
         <button
           className={`send-button ${isLoading ? "loading" : ""}`}
