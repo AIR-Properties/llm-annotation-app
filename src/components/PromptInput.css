@@ -1,0 +1,158 @@
+.input-section {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group:last-child {
+  margin-bottom: 0;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.property-input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+textarea {
+  flex: 1;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.property-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.property-select:focus {
+  outline: none;
+  border-color: #0084ff;
+}
+
+.property-link {
+  font-size: 0.8rem;
+  color: #0066cc;
+  text-decoration: none;
+  word-break: break-all;
+  margin-top: 4px;
+  padding: 4px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  display: block;
+}
+
+.property-link:hover {
+  text-decoration: underline;
+  background-color: #e8e8e8;
+}
+
+.custom-link-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.custom-link-input input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.custom-link-input input:focus {
+  outline: none;
+  border-color: #0084ff;
+}
+
+.paste-button {
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.paste-button:hover {
+  background-color: #e0e0e0;
+}
+
+.send-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 16px;
+  background-color: #0084ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.send-button:hover:not(:disabled) {
+  background-color: #0066cc;
+}
+
+.send-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .input-section {
+    padding: 15px;
+  }
+
+  .input-row {
+    flex-direction: column;
+  }
+
+  .paste-button {
+    align-self: flex-end;
+  }
+}
