@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import BackButton from "./BackButton";
+import PromptBox from "./PromptBox";
 import { annotationService } from "../services/api";
 import { AnnotationPrompt } from "../types/api";
 import { SAMPLE_ANNOTATIONS } from "../data/sampleData";
@@ -285,19 +286,10 @@ const Annotations: React.FC = () => {
 
       {currentPrompt && (
         <>
-          <div className="prompt-section">
-            <div className="prompt-title">{currentPrompt.prompt}</div>
-            {currentPrompt.metadata?.link && (
-              <a
-                href={currentPrompt.metadata.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="metadata-link"
-              >
-                View Property Details →
-              </a>
-            )}
-          </div>
+          <PromptBox
+            prompt={currentPrompt.prompt}
+            metadata={currentPrompt.metadata}
+          />
 
           <div className="chat-section">
             {chatMessages.map((message) => (

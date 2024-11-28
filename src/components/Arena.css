@@ -22,7 +22,7 @@
 .content-wrapper {
   flex: 1;
   position: relative;
-  margin-top: 60px;
+  margin-top: 20px; /* Adjusted to account for PromptBox's margin */
   overflow: hidden;
 }
 
@@ -46,39 +46,6 @@
   padding-right: 20px;
   box-sizing: border-box;
   overscroll-behavior: contain;
-}
-
-.prompt-section {
-  background-color: #f0f7ff;
-  padding: 25px;
-  border-radius: 8px;
-  border: 1px solid #e1effe;
-  margin-bottom: 30px;
-  margin-top: 60px;
-}
-
-.prompt-title {
-  font-size: 1.1em;
-  color: #2d5b9e;
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-
-.metadata-link {
-  display: inline-block;
-  color: #0084ff;
-  text-decoration: none;
-  font-size: 0.9em;
-  margin-top: 12px;
-  padding: 6px 12px;
-  border: 1px solid #0084ff;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.metadata-link:hover {
-  background-color: #0084ff;
-  color: white;
 }
 
 .navigation-wrapper {

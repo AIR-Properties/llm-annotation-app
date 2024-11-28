@@ -21,40 +21,6 @@
   padding: 30px;
 }
 
-.prompt-section {
-  background-color: #f0f7ff;
-  padding: 15px 25px;
-  border-bottom: 1px solid #e1effe;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  flex-shrink: 0;
-}
-
-.prompt-title {
-  font-size: 1.1em;
-  color: #2d5b9e;
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-
-.metadata-link {
-  display: inline-block;
-  color: #0084ff;
-  text-decoration: none;
-  font-size: 0.9em;
-  margin-top: 8px;
-  padding: 6px 12px;
-  border: 1px solid #0084ff;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.metadata-link:hover {
-  background-color: #0084ff;
-  color: white;
-}
-
 .chat-section {
   flex: 1;
   overflow-y: auto;

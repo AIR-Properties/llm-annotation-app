@@ -3,10 +3,11 @@ import ResponseList from "./ResponseList";
 import Toast from "./Toast";
 import Footer from "./Footer";
 import BackButton from "./BackButton";
+import PromptBox from "./PromptBox";
 import { annotationService, APIError } from "../services/api";
 import { ERROR_MESSAGES } from "../constants/messages";
 import { FeedbackType } from "../types/domain";
-import { AnnotationPrompt, AnnotationResponse } from "../types/api";
+import { AnnotationPrompt } from "../types/api";
 import { SAMPLE_ANNOTATIONS } from "../data/sampleData";
 import { getUserName } from "../utils/auth";
 import "./Arena.css";
@@ -128,19 +129,10 @@ const Arena: React.FC = () => {
       <div className="content-wrapper">
         {currentPrompt && (
           <div className="arena-box">
-            <div className="prompt-section">
-              <div className="prompt-title">{currentPrompt.prompt}</div>
-              {currentPrompt.metadata?.link && (
-                <a
-                  href={currentPrompt.metadata.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="metadata-link"
-                >
-                  View Property Details →
-                </a>
-              )}
-            </div>
+            <PromptBox
+              prompt={currentPrompt.prompt}
+              metadata={currentPrompt.metadata}
+            />
             {currentPrompt.responses && (
               <ResponseList
                 results={currentPrompt.responses.map((response) => ({
